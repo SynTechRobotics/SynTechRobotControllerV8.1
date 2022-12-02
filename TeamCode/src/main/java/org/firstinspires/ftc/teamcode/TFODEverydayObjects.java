@@ -54,8 +54,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  */
 @TeleOp(name = "TFOD Everyday Objects", group = "Concept")
 public class TFODEverydayObjects extends LinearOpMode {
-    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/detect.tflite";
-    private static final String TFOD_MODEL_LABELS = "/sdcard/FIRST/tflitemodels/labelmap.txt";
+    private static final String TFOD_MODEL_FILE = "/FtcRobotController/scr/main/detect.tflite";
+    private static final String TFOD_MODEL_LABELS = "/FtcRobotController/scr/mainff/labelmap.txt";
     private String[] labels;
 
     /*
