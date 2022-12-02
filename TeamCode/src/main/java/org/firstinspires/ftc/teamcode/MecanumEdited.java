@@ -40,6 +40,7 @@ public class MecanumEdited extends LinearOpMode {
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LeftViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
@@ -149,12 +150,16 @@ public class MecanumEdited extends LinearOpMode {
             }
 
             RightViperSlide.setTargetPosition(position);
+            LeftViperSlide.setTargetPosition(-position);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             if (bool1) {
                 RightViperSlide.setVelocity(2750);
+                LeftViperSlide.setVelocity(2750);
                 bool1 = false;
             } else {
                 RightViperSlide.setVelocity(2500);
+                LeftViperSlide.setVelocity(2500);
             }
 
             telemetry.addData("pos", RightViperSlide.getCurrentPosition());
