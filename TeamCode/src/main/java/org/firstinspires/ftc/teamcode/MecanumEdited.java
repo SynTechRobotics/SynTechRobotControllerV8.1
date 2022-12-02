@@ -24,17 +24,17 @@ public class MecanumEdited extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
+//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
+//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
+//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
+//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
         DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
-        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -89,10 +89,10 @@ public class MecanumEdited extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-            motorFrontLeft.setPower(-frontLeftPower);
-            motorBackLeft.setPower(-backLeftPower);
-            motorFrontRight.setPower(frontRightPower);
-            motorBackRight.setPower(backRightPower);
+//            motorFrontLeft.setPower(-frontLeftPower);
+//            motorBackLeft.setPower(-backLeftPower);
+//            motorFrontRight.setPower(frontRightPower);
+//            motorBackRight.setPower(backRightPower);
 
 
 // Viper Slide Code:
