@@ -24,23 +24,23 @@ public class MecanumEdited extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
-//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
-        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
+//        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
-//        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LeftViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        LeftViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
@@ -91,10 +91,10 @@ public class MecanumEdited extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-//            motorFrontLeft.setPower(-frontLeftPower);
-//            motorBackLeft.setPower(-backLeftPower);
-//            motorFrontRight.setPower(frontRightPower);
-//            motorBackRight.setPower(backRightPower);
+            motorFrontLeft.setPower(-frontLeftPower);
+            motorBackLeft.setPower(-backLeftPower);
+            motorFrontRight.setPower(frontRightPower);
+            motorBackRight.setPower(backRightPower);
 
 
 // Viper Slide Code:
@@ -112,6 +112,22 @@ public class MecanumEdited extends LinearOpMode {
             if(gamepad1.a && useButtons) {
                 bool1 = true;
                 position = 0;
+            }
+
+            if (prevposition != position) {
+//                LeftViperSlide.setTargetPosition(-position-200);
+                RightViperSlide.setTargetPosition(position);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                prevposition = position;
+                if (bool1) {
+                    RightViperSlide.setVelocity(2750);
+//                    LeftViperSlide.setVelocity(2750);
+                    bool1 = false;
+                } else {
+                    RightViperSlide.setVelocity(2500);
+//                    LeftViperSlide.setVelocity(2500);
+                }
             }
 
             /* mode switch code (unused)
@@ -132,36 +148,36 @@ public class MecanumEdited extends LinearOpMode {
                 useIncrements = false;
             }
 */
-            if (gamepad1.right_trigger > 0 && prevInterval+10 < System.currentTimeMillis()) {
-                position += 200;
-                if (position > 4100) {
-                    position = 4100;
+            if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                if (gamepad1.dpad_up) {
+                    position += 200;
+                    if (position > 4100) {
+                        position = 4100;
+                    }
+                    sleep(40);
                 }
+                if (gamepad1.dpad_down && position > 0) {
+                    position -= 200;
+                    if (position < 0) {
+                        position = 0;
+                    }
+                    sleep(40);
+                }
+//                LeftViperSlide.setTargetPosition(-position-200);
+                RightViperSlide.setTargetPosition(position);
+//                TimeUnit.MILLISECONDS.sleep(10);
                 prevInterval = System.currentTimeMillis();
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RightViperSlide.setVelocity(1500);
+//                LeftViperSlide.setVelocity(1500);
             }
-            if (gamepad1.left_trigger > 0 && position > 0 && prevInterval+10 < System.currentTimeMillis()) {
-                position -= 200;
-                
-                TimeUnit.MILLISECONDS.sleep(10);
-                prevInterval = System.currentTimeMillis();
-            }
+
+
+
             telemetry.addData("position", position);
             telemetry.update();
-            if (prevposition != position) {
-                LeftViperSlide.setTargetPosition(-position-200);
-                RightViperSlide.setTargetPosition(position);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                prevposition = position;
-                if (bool1) {
-                    RightViperSlide.setVelocity(2750);
-                    LeftViperSlide.setVelocity(2750);
-                    bool1 = false;
-                } else {
-                    RightViperSlide.setVelocity(2500);
-                    LeftViperSlide.setVelocity(2500);
-                }
-            }
+
 
             if (gamepad1.left_bumper) {
                 clawLeft.setPosition(0.5);
