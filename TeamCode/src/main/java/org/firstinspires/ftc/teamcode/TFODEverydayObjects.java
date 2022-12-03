@@ -217,6 +217,8 @@ public class TFODEverydayObjects extends LinearOpMode {
             for (String label : labels) {
                 RobotLog.vv("readLabels()", " " + label);
             }
+            telemetry.addData("lableslength", labels.length);
+            telemetry.update();
         } else {
             RobotLog.vv("readLabels()", "No labels read!");
         }
