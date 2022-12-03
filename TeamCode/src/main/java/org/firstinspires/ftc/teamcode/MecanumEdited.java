@@ -61,10 +61,12 @@ public class MecanumEdited extends LinearOpMode {
         */
 
         waitForStart();
-
+        long starttime = System.currentTimeMillis();
         if (isStopRequested()) return;
 
+        long prevInterval = starttime;
         int position = 0;
+        int prevposition = 0;
         boolean useIncrements = false;
         boolean useButtons = true;
         boolean bool1 = true;
@@ -100,25 +102,18 @@ public class MecanumEdited extends LinearOpMode {
 
             if(gamepad1.x && useButtons){
                 position = 1700;
-                telemetry.addData("Pos", position);
-                telemetry.update();
             }
             if(gamepad1.y && useButtons) {
                 position = 3000;
-                telemetry.addData("Pos", position);
-                telemetry.update();
             }
             if(gamepad1.b && useButtons) {
                 position = 4100;
-                telemetry.addData("Pos", position);
-                telemetry.update();
             }
             if(gamepad1.a && useButtons) {
                 bool1 = true;
                 position = 0;
-                telemetry.addData("Pos", position);
-                telemetry.update();
             }
+
             /* mode switch code (unused)
             if (gamepad1.dpad_left) {
                 RightViperSlide.setTargetPosition(0);
@@ -137,33 +132,36 @@ public class MecanumEdited extends LinearOpMode {
                 useIncrements = false;
             }
 */
-            if (gamepad1.dpad_up ) {
+            if (gamepad1.right_trigger > 0 && prevInterval+10 < System.currentTimeMillis()) {
                 position += 200;
                 if (position > 4100) {
                     position = 4100;
                 }
-                TimeUnit.MILLISECONDS.sleep(140);
+                prevInterval = System.currentTimeMillis();
             }
-            if (gamepad1.dpad_down && position > 0) {
+            if (gamepad1.left_trigger > 0 && position > 0 && prevInterval+10 < System.currentTimeMillis()) {
                 position -= 200;
-                TimeUnit.MILLISECONDS.sleep(140);
+                
+                TimeUnit.MILLISECONDS.sleep(10);
+                prevInterval = System.currentTimeMillis();
             }
-
-            RightViperSlide.setTargetPosition(position);
-            LeftViperSlide.setTargetPosition(-position);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (bool1) {
-                RightViperSlide.setVelocity(2750);
-                LeftViperSlide.setVelocity(2750);
-                bool1 = false;
-            } else {
-                RightViperSlide.setVelocity(2500);
-                LeftViperSlide.setVelocity(2500);
-            }
-
-            telemetry.addData("pos", RightViperSlide.getCurrentPosition());
+            telemetry.addData("position", position);
             telemetry.update();
+            if (prevposition != position) {
+                LeftViperSlide.setTargetPosition(-position-200);
+                RightViperSlide.setTargetPosition(position);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                prevposition = position;
+                if (bool1) {
+                    RightViperSlide.setVelocity(2750);
+                    LeftViperSlide.setVelocity(2750);
+                    bool1 = false;
+                } else {
+                    RightViperSlide.setVelocity(2500);
+                    LeftViperSlide.setVelocity(2500);
+                }
+            }
 
             if (gamepad1.left_bumper) {
                 clawLeft.setPosition(0.5);
