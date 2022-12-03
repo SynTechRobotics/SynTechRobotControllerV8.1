@@ -27,8 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-        package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
+import android.os.Environment;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -55,8 +56,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  */
 @TeleOp(name = "TFOD Everyday Objects", group = "Concept")
 public class TFODEverydayObjects extends LinearOpMode {
-    private static final String TFOD_MODEL_FILE = "detect.tflite";
-    private static final String TFOD_MODEL_LABELS = "labelmap.txt";
+    private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/detect.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/labelmap.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+
     private String[] labels;
 
     /*
