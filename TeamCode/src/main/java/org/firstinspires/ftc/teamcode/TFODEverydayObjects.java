@@ -40,7 +40,6 @@ import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
@@ -54,10 +53,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TFOD Everyday Objects", group = "Concept")
+@TeleOp(name = "CustomSleeve", group = "Concept")
 public class TFODEverydayObjects extends LinearOpMode {
-    private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/detect.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
-    private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/labelmap.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/cocov2.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/cocov2_label_map.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
 
     private String[] labels;
 
@@ -172,7 +171,7 @@ public class TFODEverydayObjects extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
-        tfodParameters.isModelTensorFlow2 = false;
+        tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         if (labels != null) {
