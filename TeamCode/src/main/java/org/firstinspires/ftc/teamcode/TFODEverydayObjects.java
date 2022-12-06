@@ -27,10 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-        package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import android.os.Environment;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -38,11 +37,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.String;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
@@ -56,16 +53,15 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TFOD Everyday Objects", group = "Concept")
+@TeleOp(name = "CustomSleeve", group = "Concept")
 public class TFODEverydayObjects extends LinearOpMode {
-    private static final String TFOD_MODEL_FILE = "/FIRST/tflitemodels/detect.tflite";
-    String.format("%s/FIRST/tflitemodels/detect.tflite",Environment.get().getAbsoutePath());
+    private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/cocov2.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/cocov2_label_map.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
 
-    private static final String TFOD_MODEL_LABELS = "/FIRST/tflitemodels/labelmap.txt";
     private String[] labels;
 
     /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The strin     g below with which
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
      * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
      * web site at https://developer.vuforia.com/license-manager.
@@ -154,54 +150,35 @@ public class TFODEverydayObjects extends LinearOpMode {
     /**
      * Initialize the Vuforia localization engine.
      */
-    /*private void initVuforia() {
-
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+//        parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    } */
+    }
 
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
-    /* private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
-        tfodParameters.isModelTensorFlow2 = false;
+        tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         if (labels != null) {
             tfod.loadModelFromFile(TFOD_MODEL_FILE, labels);
         }
     }
-*/
-    private void initVuforia() {
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    }
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.55f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-
-
-        tfod.loadModelFromAsset(TFOD_MODEL_FILE, labels);
-    }
     /**
      * Read the labels for the object detection model from a file.
      */
@@ -239,6 +216,8 @@ public class TFODEverydayObjects extends LinearOpMode {
             for (String label : labels) {
                 RobotLog.vv("readLabels()", " " + label);
             }
+            telemetry.addData("lableslength", labels.length);
+            telemetry.update();
         } else {
             RobotLog.vv("readLabels()", "No labels read!");
         }

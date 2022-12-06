@@ -37,10 +37,12 @@ public class MecanumTeleOp extends LinearOpMode {
         LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
+        clawRight.setDirection(Servo.Direction.REVERSE);
 
 //        clawLeft.setPosition(0.1);
 //        clawRight.setPosition(0.9);
@@ -64,6 +66,7 @@ public class MecanumTeleOp extends LinearOpMode {
         boolean useButtons = true;
         int savedPosition = 0;
         boolean bool1 = true;
+        boolean clawOpen = false;
         while (opModeIsActive()) {
 //            servo2.setDirection(Servo.Direction.REVERSE);
             // Denominator is the largest motor power (absolute value) or 1
@@ -196,13 +199,18 @@ public class MecanumTeleOp extends LinearOpMode {
 //                telemetry.addData("savePos", "%.2f", lPosition);
 //                telemetry.addData("savePos", "%.2f",rPosition);
 //                telemetry.update();
-            if (gamepad1.left_bumper) {
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.7);
-            }
             if (gamepad1.right_bumper) {
-                clawLeft.setPosition(0.1);
-                clawRight.setPosition(1.0);
+                if (clawOpen) {
+                    clawLeft.setPosition(0.0);
+                    clawRight.setPosition(0.7);
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    clawOpen = false;
+                } else {
+                    clawLeft.setPosition(0.5);
+                    clawRight.setPosition(0.2);
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    clawOpen = true;
+                }
             }
 
             }
