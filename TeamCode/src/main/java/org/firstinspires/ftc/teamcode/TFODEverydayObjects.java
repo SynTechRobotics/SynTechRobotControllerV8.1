@@ -197,12 +197,7 @@ public class TFODEverydayObjects extends LinearOpMode {
                 // i suspect that the first line of the labelmap.txt file might be reserved for some future metadata schema
                 // (or that the generated label map file is incorrect).
                 // for now, skip the first line of the label map text file so that your label list is in sync with the embedded label list in the .tflite model.
-                if(index == 0) {
-                    // skip first line.
-                    br.readLine();
-                } else {
-                    labelList.add(br.readLine());
-                }
+                labelList.add(br.readLine());
                 index++;
             }
         } catch (Exception e) {
