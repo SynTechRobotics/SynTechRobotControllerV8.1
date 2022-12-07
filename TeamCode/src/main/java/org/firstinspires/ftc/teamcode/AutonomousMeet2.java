@@ -49,10 +49,10 @@ public class AutonomousMeet2 extends LinearOpMode {
 //        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER );
 
 //        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -75,39 +75,91 @@ public class AutonomousMeet2 extends LinearOpMode {
 //        clawRight.setPosition(1);
         sleep(1500);
         Forward(1000, 1000);
-        Left(500, 1000);
 
 //      telemetry.addData("finished", "true");
         telemetry.update();
     }
 
-    private void Forward(int time, int velocity) throws InterruptedException {
-        motorBackLeft.setVelocity(-velocity);
+    private void Forward(int position, int velocity) throws InterruptedException {
+        motorFrontRight.setTargetPosition(position);
+        motorBackLeft.setTargetPosition(-position);
+        motorBackRight.setTargetPosition(position);
+        motorFrontLeft.setTargetPosition(-position);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setVelocity(velocity);
+        motorBackLeft.setVelocity(-velocity);
         motorBackRight.setVelocity(velocity);
         motorFrontLeft.setVelocity(-velocity);
-        TimeUnit.MILLISECONDS.sleep(time);
+        sleep(2000);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(10);
     }
-    private void Left(int time, int velocity) throws InterruptedException {
-        motorBackLeft.setVelocity(velocity*2);
-        motorFrontRight.setVelocity(velocity*2);
-        motorBackRight.setVelocity(-velocity*2);
-        motorFrontLeft.setVelocity(-velocity*2);
-        TimeUnit.MILLISECONDS.sleep(time);
+    private void Left(int position, int velocity) throws InterruptedException {
+        motorBackLeft.setTargetPosition(position);
+        motorFrontRight.setTargetPosition(position);
+        motorBackRight.setTargetPosition(-position);
+        motorFrontLeft.setTargetPosition(-position);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setVelocity(velocity);
+        motorFrontRight.setVelocity(velocity);
+        motorBackRight.setVelocity(velocity);
+        motorFrontLeft.setVelocity(velocity);
+        sleep(position);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    private void Right(int time, int velocity) throws InterruptedException {
-        motorBackLeft.setVelocity(-velocity*2);
-        motorFrontRight.setVelocity(-velocity*2);
-        motorBackRight.setVelocity(velocity*2);
-        motorFrontLeft.setVelocity(velocity*2);
-        TimeUnit.MILLISECONDS.sleep(time);
+    private void Right(int position, int velocity) throws InterruptedException {
+        motorBackLeft.setTargetPosition(-position);
+        motorFrontRight.setTargetPosition(-position);
+        motorBackRight.setTargetPosition(position);
+        motorFrontLeft.setTargetPosition(position);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setVelocity(velocity);
+        motorFrontRight.setVelocity(velocity);
+        motorBackRight.setVelocity(velocity);
+        motorFrontLeft.setVelocity(velocity);
+        while (motorBackRight.getCurrentPosition() < position) {
+            TimeUnit.NANOSECONDS.sleep(1);
+        }
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    private void Back(int time, int velocity) throws InterruptedException {
-        motorBackLeft.setVelocity(-velocity);
-        motorFrontRight.setVelocity(-velocity);
-        motorBackRight.setVelocity(-velocity);
-        motorFrontLeft.setVelocity(-velocity);
-        TimeUnit.MILLISECONDS.sleep(time);
+    private void Back(int position, int velocity) throws InterruptedException {
+        motorBackLeft.setTargetPosition(-position);
+        motorFrontRight.setTargetPosition(-position);
+        motorBackRight.setTargetPosition(-position);
+        motorFrontLeft.setTargetPosition(-position);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setVelocity(velocity);
+        motorFrontRight.setVelocity(velocity);
+        motorBackRight.setVelocity(velocity);
+        motorFrontLeft.setVelocity(velocity);
+        while (motorFrontRight.getCurrentPosition() > (position*-1)) {
+            TimeUnit.NANOSECONDS.sleep(1);
+        }
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
 
