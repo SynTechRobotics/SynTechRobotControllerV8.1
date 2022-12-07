@@ -179,14 +179,6 @@ public class MecanumEdited extends LinearOpMode {
             telemetry.update();
 
 
-            if (gamepad1.left_bumper) {
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.7);
-            }
-            if (gamepad1.right_bumper) {
-                clawLeft.setPosition(0.1);
-                clawRight.setPosition(1.0);
-            }
 
         }
 

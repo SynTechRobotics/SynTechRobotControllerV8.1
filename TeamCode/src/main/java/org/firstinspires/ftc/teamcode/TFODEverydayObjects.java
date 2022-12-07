@@ -27,8 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-        package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
+import android.os.Environment;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -39,7 +40,6 @@ import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
@@ -53,10 +53,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "TFOD Everyday Objects", group = "Concept")
+@TeleOp(name = "CustomSleeve", group = "Concept")
 public class TFODEverydayObjects extends LinearOpMode {
-    private static final String TFOD_MODEL_FILE = "detect.tflite";
-    private static final String TFOD_MODEL_LABELS = "labelmap.txt";
+    private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/cocov2.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/cocov2_label_map.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+
     private String[] labels;
 
     /*
@@ -170,7 +171,7 @@ public class TFODEverydayObjects extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.6f;
-        tfodParameters.isModelTensorFlow2 = false;
+        tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         if (labels != null) {
@@ -196,12 +197,7 @@ public class TFODEverydayObjects extends LinearOpMode {
                 // i suspect that the first line of the labelmap.txt file might be reserved for some future metadata schema
                 // (or that the generated label map file is incorrect).
                 // for now, skip the first line of the label map text file so that your label list is in sync with the embedded label list in the .tflite model.
-                if(index == 0) {
-                    // skip first line.
-                    br.readLine();
-                } else {
-                    labelList.add(br.readLine());
-                }
+                labelList.add(br.readLine());
                 index++;
             }
         } catch (Exception e) {
@@ -215,6 +211,8 @@ public class TFODEverydayObjects extends LinearOpMode {
             for (String label : labels) {
                 RobotLog.vv("readLabels()", " " + label);
             }
+            telemetry.addData("lableslength", labels.length);
+            telemetry.update();
         } else {
             RobotLog.vv("readLabels()", "No labels read!");
         }

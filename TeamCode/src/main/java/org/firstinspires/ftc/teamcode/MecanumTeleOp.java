@@ -37,10 +37,12 @@ public class MecanumTeleOp extends LinearOpMode {
         LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
+        clawRight.setDirection(Servo.Direction.REVERSE);
 
 //        clawLeft.setPosition(0.1);
 //        clawRight.setPosition(0.9);
@@ -58,12 +60,18 @@ public class MecanumTeleOp extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+        long starttime = System.currentTimeMillis();
 
-        double position = 0;
+
+
         boolean useIncrements = false;
         boolean useButtons = true;
         int savedPosition = 0;
         boolean bool1 = true;
+        boolean clawOpen = false;
+        long prevInterval = starttime;
+        int position = 0;
+        int prevposition = 0;
         while (opModeIsActive()) {
 //            servo2.setDirection(Servo.Direction.REVERSE);
             // Denominator is the largest motor power (absolute value) or 1
@@ -93,31 +101,41 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1;
-                telemetry.addData("Pos", position);
-                telemetry.update();
+                position = 1700;
             }
             if(gamepad1.y && useButtons) {
-                position = 2;
-                telemetry.addData("Pos", position);
-                telemetry.update();
+                position = 3000;
             }
             if(gamepad1.b && useButtons) {
-                position = 2.5;
-                telemetry.addData("Pos", position);
-                telemetry.update();
+                position = 4100;
             }
             if(gamepad1.a && useButtons) {
                 bool1 = true;
                 position = 0;
-                telemetry.addData("Pos", position);
-                telemetry.update();
             }
+
+            if (prevposition != position) {
+//                LeftViperSlide.setTargetPosition(-position-200);
+                RightViperSlide.setTargetPosition(position);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                prevposition = position;
+                if (bool1) {
+                    RightViperSlide.setVelocity(2750);
+//                    LeftViperSlide.setVelocity(2750);
+                    bool1 = false;
+                } else {
+                    RightViperSlide.setVelocity(2500);
+//                    LeftViperSlide.setVelocity(2500);
+                }
+            }
+
+            /* mode switch code (unused)
             if (gamepad1.dpad_left) {
                 RightViperSlide.setTargetPosition(0);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 RightViperSlide.setVelocity(2750);
-                savedPosition = 0;
+                position = 0;
                 useButtons = false;
                 useIncrements = true;
             }
@@ -125,49 +143,35 @@ public class MecanumTeleOp extends LinearOpMode {
                 RightViperSlide.setTargetPosition(0);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 RightViperSlide.setVelocity(2750);
-                savedPosition = 0;
+                position = 0;
                 useButtons = true;
                 useIncrements = false;
             }
-            if (useIncrements) {
+*/
+            if (gamepad1.dpad_up || gamepad1.dpad_down) {
                 if (gamepad1.dpad_up) {
-                    savedPosition += 200;
-                    TimeUnit.MILLISECONDS.sleep(140);
+                    position += 200;
+                    if (position > 4100) {
+                        position = 4100;
+                    }
+                    sleep(40);
                 }
-                if (gamepad1.dpad_down && savedPosition > 0) {
-                    savedPosition -= 200;
-                    TimeUnit.MILLISECONDS.sleep(140);
+                if (gamepad1.dpad_down && position > 0) {
+                    position -= 200;
+                    if (position < 0) {
+                        position = 0;
+                    }
+                    sleep(40);
                 }
-                RightViperSlide.setTargetPosition(savedPosition);
+//                LeftViperSlide.setTargetPosition(-position-200);
+                RightViperSlide.setTargetPosition(position);
+//                TimeUnit.MILLISECONDS.sleep(10);
+                prevInterval = System.currentTimeMillis();
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 RightViperSlide.setVelocity(1500);
-
+//                LeftViperSlide.setVelocity(1500);
             }
-            if (position == 0 && useButtons) {
-                if (bool1) {
-                    RightViperSlide.setTargetPosition(0);
-                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    RightViperSlide.setVelocity(2750);
-                    bool1 = false;
-                }
-            }
-            if (position == 1 && useButtons) {
-                RightViperSlide.setTargetPosition(1700);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2500);
-            }
-            if (position == 2 && useButtons) {
-                RightViperSlide.setTargetPosition(3000);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2500);
-            }
-            if (position == 3 && useButtons) {
-                RightViperSlide.setTargetPosition(4100);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2500);
-            }
-            telemetry.addData("pos", RightViperSlide.getCurrentPosition());
-            telemetry.update();
 
 
             // Servo Code
@@ -196,13 +200,18 @@ public class MecanumTeleOp extends LinearOpMode {
 //                telemetry.addData("savePos", "%.2f", lPosition);
 //                telemetry.addData("savePos", "%.2f",rPosition);
 //                telemetry.update();
-            if (gamepad1.left_bumper) {
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.7);
-            }
             if (gamepad1.right_bumper) {
-                clawLeft.setPosition(0.1);
-                clawRight.setPosition(1.0);
+                if (clawOpen) {
+                    clawLeft.setPosition(0.0);
+                    clawRight.setPosition(0.7);
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    clawOpen = false;
+                } else {
+                    clawLeft.setPosition(0.5);
+                    clawRight.setPosition(0.2);
+                    TimeUnit.MILLISECONDS.sleep(500);
+                    clawOpen = true;
+                }
             }
 
             }
