@@ -24,12 +24,12 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "RobotVisionAutonomous")
+@Autonomous(name = "RobotVisionAutonomousCustom")
 //@Disabled
 public class Auto extends LinearOpMode {
 
 
-    private static final String TFOD_MODEL_ASSET = "fullconetraining.tflite";
+    private static final String TFOD_MODEL_ASSET = "FullCone1209.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
 
