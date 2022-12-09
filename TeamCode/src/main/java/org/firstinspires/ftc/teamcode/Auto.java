@@ -121,7 +121,7 @@ public class Auto extends LinearOpMode {
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                        if (recognition.getLabel() != "1 Bolt" && recognition.getLabel() != "2 Bulb" && recognition.getLabel() != "3 Panel") {
+                        if (recognition.getLabel() != "1 ball" && recognition.getLabel() != "2 mapleLeaves" && recognition.getLabel() != "3 popsicle") {
                             objectRecognized = "";
                         } else if (firstObjectDetected && recognition.getConfidence() > 0.30) {
                             objectRecognized = recognition.getLabel();
