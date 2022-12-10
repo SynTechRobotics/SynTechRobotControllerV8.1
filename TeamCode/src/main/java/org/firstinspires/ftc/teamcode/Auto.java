@@ -176,15 +176,15 @@ public class Auto extends LinearOpMode {
 //        leftBackDrive.setPower(0);
 //        rightBackDrive.setPower(0);
 //        rightFrontDrive.setPower(0);
-        if (objectRecognized == "1 Bolt") {
+        if (objectRecognized == "2 mapleLeaves") {
             leftFrontDrive.setPower(-0.5);
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(-0.5);
             rightFrontDrive.setPower(0.5);
 
-            sleep(1200);
+            sleep(1100);
 
-            sleep(1300);
+//            sleep(1300);
 
             leftFrontDrive.setPower(0);
             leftBackDrive.setPower(0);
@@ -194,13 +194,13 @@ public class Auto extends LinearOpMode {
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            sleep(1100);
-        } else if (objectRecognized == "2 Bulb") {
+            sleep(1000);
+        } else if (objectRecognized == "1 ball") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            sleep(2000);
+            sleep(1850);
             leftFrontDrive.setPower(0);
             leftBackDrive.setPower(0);
             rightBackDrive.setPower(0);
@@ -210,19 +210,19 @@ public class Auto extends LinearOpMode {
             rightBackDrive.setPower(-0.5);
             rightFrontDrive.setPower(-0.5);
             sleep(1000);
-        } else if (objectRecognized == "3 Panel") {
+        } else if (objectRecognized == "3 popsicle") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(-0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(-0.5);
 
 
-            sleep(1200);
+            sleep(1100);
 
-            sleep(1000);
+//            sleep(1000);
 
 
-            sleep(1200);
+//            sleep(1200);
 
             leftFrontDrive.setPower(0);
             leftBackDrive.setPower(0);
@@ -232,7 +232,7 @@ public class Auto extends LinearOpMode {
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            sleep(1100);
+            sleep(1000);
         }
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
