@@ -150,18 +150,18 @@ public class MecanumTeleOp extends LinearOpMode {
 */
             if (gamepad1.dpad_up || gamepad1.dpad_down) {
                 if (gamepad1.dpad_up) {
-                    position += 130;
+                    position += 150;
                     if (position > 4100) {
                         position = 4100;
                     }
-                    sleep(40);
+                    sleep(80);
                 }
                 if (gamepad1.dpad_down && position > 0) {
-                    position -= 130;
+                    position -= 150;
                     if (position < 0) {
                         position = 0;
                     }
-                    sleep(40);
+                    sleep(80);
                 }
 //                LeftViperSlide.setTargetPosition(-position-200);
                 RightViperSlide.setTargetPosition(position);
