@@ -69,15 +69,15 @@ public class TrajectorRRTest extends LinearOpMode {
                 .build();
 
         TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(afterPositioning)
-                .strafeRight(28)
+                .strafeRight(27)
                 .build();
 
-        Trajectory left = drive.trajectoryBuilder(afterBacktoStart)
-                .lineToConstantHeading(new Vector2d(36, 42))
+        Trajectory left = drive.trajectoryBuilder(afterPositioning)
+                .lineToConstantHeading(new Vector2d(28.5, 53))
                 .build();
 
         Trajectory right = drive.trajectoryBuilder(afterBacktoStart)
-                .lineToConstantHeading(new Vector2d(36, -40))
+                .lineToConstantHeading(new Vector2d(40, -47))
                 .build();
 
 
@@ -103,22 +103,22 @@ public class TrajectorRRTest extends LinearOpMode {
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
-                    telemetry.addData("Object->", objectRecognizedList);
+//                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
+//                    telemetry.addData("Object->", objectRecognizedList);
                     for (Recognition recognition : updatedRecognitions) {
                         double col = (recognition.getLeft() + recognition.getRight()) / 2;
                         double row = (recognition.getTop() + recognition.getBottom()) / 2;
                         double width = Math.abs(recognition.getRight() - recognition.getLeft());
                         double height = Math.abs(recognition.getTop() - recognition.getBottom());
-                        telemetry.addData("", " ");
-                        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                        telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                        telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+//                        telemetry.addData("", " ");
+//                        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+//                        telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
+//                        telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                         if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'Z'+recognition.getConfidence())) {
                             objectRecognizedList.add(recognition.getLabel()+'Z'+recognition.getConfidence());
                         }
                     }
-                    telemetry.update();
+//                    telemetry.update();
                 }
             }
         }
@@ -133,8 +133,6 @@ public class TrajectorRRTest extends LinearOpMode {
         float ballConfidence = 0;
         float popsicleConfidence = 0;
         String trueObjectRecognized = "2 mapleLeaves";
-        telemetry.addData("size", objectRecognizedList.size());
-        telemetry.update();
         while (xVal < objectRecognizedList.size()) {
             String[] label = objectRecognizedList.get(xVal).split("Z");
             if(label[0].equals("2 mapleLeaves")) {
@@ -171,6 +169,8 @@ public class TrajectorRRTest extends LinearOpMode {
         } else {
             trueObjectRecognized = "2 mapleLeaves";
         }
+        telemetry.addData("trueObjectRecognized", trueObjectRecognized);
+        telemetry.update();
         RightViperSlide.setTargetPosition(0);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
