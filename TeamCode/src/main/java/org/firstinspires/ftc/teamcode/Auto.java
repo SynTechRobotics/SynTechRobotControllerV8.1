@@ -95,8 +95,8 @@ public class Auto extends LinearOpMode {
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-//        clawLeft.setPosition(0.1);
-//        clawRight.setPosition(1);
+          clawLeft.setPosition(0.5);
+          clawRight.setPosition(0.2);
 //        sleep(1500);
         RightViperSlide.setTargetPosition(1000);
         LeftViperSlide.setTargetPosition(-1000);
