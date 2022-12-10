@@ -27,7 +27,9 @@ public class TrajectorRRTest extends LinearOpMode {
         Trajectory forward = drive.trajectoryBuilder(startPose)
                 .forward(10)
                 .build();
-        Trajectory back = drive.tr
+        Trajectory back = drive.trajectoryBuilder(startPose)
+                .back(10)
+                .build();
         TrajectorySequence toHighJunctionPosition = drive.trajectorySequenceBuilder(startPose)
                 .forward(4.5)
                 .forward(24)
@@ -51,14 +53,17 @@ public class TrajectorRRTest extends LinearOpMode {
 //
 //                })
                 .back(10)
-                .addDisplacementMarker(() -> {
-                    // This marker runs after the first splineTo()
-                    RightViperSlide.setTargetPosition(0);
-                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    RightViperSlide.setVelocity(2000);
-                    sleep(3000);
-                    // Run your action in here!
-                })
+//                .addDisplacementMarker(() -> {
+//                    // This marker runs after the first splineTo()
+//                    RightViperSlide.setTargetPosition(0);
+//                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                    RightViperSlide.setVelocity(2000);
+//                    sleep(3000);
+//                    // Run your action in here!
+//                })
+
+                .build();
+        TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(startPose)
                 .strafeRight(25)
                 .back(24)
                 .build();
@@ -66,6 +71,13 @@ public class TrajectorRRTest extends LinearOpMode {
         clawLeft.setPosition(0);
         clawRight.setPosition(0.2);
         sleep(1000);
-        if (!isStopRequested()) drive.followTrajectorySequence(toHighJunction);
+        if (!isStopRequested()) {
+            drive.followTrajectorySequence(toHighJunctionPosition);
+            RightViperSlide.setTargetPosition(3000);
+            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RightViperSlide.setVelocity(2000);
+            sleep(2000);
+            
+        }
     }
 }
