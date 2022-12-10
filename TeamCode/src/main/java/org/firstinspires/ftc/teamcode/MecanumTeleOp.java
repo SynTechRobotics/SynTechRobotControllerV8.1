@@ -150,14 +150,14 @@ public class MecanumTeleOp extends LinearOpMode {
 */
             if (gamepad1.dpad_up || gamepad1.dpad_down) {
                 if (gamepad1.dpad_up) {
-                    position += 200;
+                    position += 130;
                     if (position > 4100) {
                         position = 4100;
                     }
                     sleep(40);
                 }
                 if (gamepad1.dpad_down && position > 0) {
-                    position -= 200;
+                    position -= 130;
                     if (position < 0) {
                         position = 0;
                     }
