@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name="AutonomousRoadRunner")
@@ -50,34 +51,35 @@ public class TrajectorRRTest extends LinearOpMode {
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Pose2d startPose = new Pose2d(0, 0, 0);
         Pose2d afterPositioning = new Pose2d(28.5, 25, 0);
-        Pose2d afterForward = new Pose2d(38.5, 25, 0);
+        Pose2d afterForward = new Pose2d(36.5, 25, 0);
         Pose2d afterBacktoStart = new Pose2d(38.5, 0, 0);
         drive.setPoseEstimate(startPose);
         Trajectory forward = drive.trajectoryBuilder(afterPositioning)
-                .lineToConstantHeading(new Vector2d(38.5, 25))
+                .lineToConstantHeading(new Vector2d(35, 25))
                 .build();
 
         Trajectory back = drive.trajectoryBuilder(afterForward)
-                .lineToConstantHeading(new Vector2d(28.5, 25))
+                .lineToConstantHeading(new Vector2d(29.5, 25))
                 .build();
 
         TrajectorySequence toHighJunctionPosition = drive.trajectorySequenceBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(52.5, 0))
                 .back(24)
-                .strafeLeft(25)
+                .strafeLeft(27)
                 .build();
 
         TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(afterPositioning)
-                .lineToConstantHeading(new Vector2d(38.5, 0))
+                .strafeRight(28)
                 .build();
 
         Trajectory left = drive.trajectoryBuilder(afterBacktoStart)
-                .lineToConstantHeading(new Vector2d(38.5, 48))
+                .lineToConstantHeading(new Vector2d(36, 42))
                 .build();
 
         Trajectory right = drive.trajectoryBuilder(afterBacktoStart)
-                .lineToConstantHeading(new Vector2d(38.5, -48))
+                .lineToConstantHeading(new Vector2d(36, -40))
                 .build();
+
 
         initVuforia();
         initTfod();
@@ -94,14 +96,15 @@ public class TrajectorRRTest extends LinearOpMode {
         RightViperSlide.setTargetPosition(1000);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
-        String objectRecognized = "";
-        boolean firstObjectDetected = true;
-        while (firstObjectDetected && !isStopRequested()) {
+        List<String> objectRecognizedList = new ArrayList<>();
+        long start = System.currentTimeMillis();
+        long end = start + 3000;
+        while (objectRecognizedList.size() < 4 && !isStopRequested() && System.currentTimeMillis() < end) {
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Objects Detected", updatedRecognitions.size());
-                    telemetry.addData("Object->", objectRecognized);
+                    telemetry.addData("Object->", objectRecognizedList);
                     for (Recognition recognition : updatedRecognitions) {
                         double col = (recognition.getLeft() + recognition.getRight()) / 2;
                         double row = (recognition.getTop() + recognition.getBottom()) / 2;
@@ -111,11 +114,8 @@ public class TrajectorRRTest extends LinearOpMode {
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                        if (recognition.getLabel() != "1 ball" && recognition.getLabel() != "2 mapleLeaves" && recognition.getLabel() != "3 popsicle") {
-                            objectRecognized = "";
-                        } else if (firstObjectDetected && recognition.getConfidence() > 0.30) {
-                            objectRecognized = recognition.getLabel();
-                            firstObjectDetected = false;
+                        if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'Z'+recognition.getConfidence())) {
+                            objectRecognizedList.add(recognition.getLabel()+'Z'+recognition.getConfidence());
                         }
                     }
                     telemetry.update();
@@ -125,27 +125,78 @@ public class TrajectorRRTest extends LinearOpMode {
         RightViperSlide.setTargetPosition(0);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
+        int xVal = 0;
+        int mapleLeavesCount = 0;
+        int ballCount = 0;
+        int popsicleCount = 0;
+        float mapleLeafConfidence = 0;
+        float ballConfidence = 0;
+        float popsicleConfidence = 0;
+        String trueObjectRecognized = "2 mapleLeaves";
+        telemetry.addData("size", objectRecognizedList.size());
+        telemetry.update();
+        while (xVal < objectRecognizedList.size()) {
+            String[] label = objectRecognizedList.get(xVal).split("Z");
+            if(label[0].equals("2 mapleLeaves")) {
+                mapleLeavesCount += 1;
+                if(mapleLeafConfidence > Float.parseFloat(label[1])) {
+                    mapleLeafConfidence = Float.parseFloat(label[1]);
+                }
+            } else if(label[0].equals("1 ball")) {
+                ballCount += 1;
+                if(ballConfidence > Float.parseFloat(label[1])) {
+                    ballConfidence = Float.parseFloat(label[1]);
+                }
+            } else if(objectRecognizedList.get(xVal).startsWith("3 popsicle")) {
+                popsicleCount += 1;
+                if(popsicleConfidence > Float.parseFloat(label[1])) {
+                    popsicleConfidence = Float.parseFloat(label[1]);
+                }
+            }
+            xVal += 1;
+        }
+
+        if (mapleLeavesCount > ballCount && mapleLeavesCount > popsicleCount) {
+            trueObjectRecognized = "2 mapleLeaves";
+        } else if (ballCount > mapleLeavesCount && ballCount > popsicleCount) {
+            trueObjectRecognized = "1 ball";
+        } else if (popsicleCount > mapleLeavesCount && popsicleCount > ballCount) {
+            trueObjectRecognized = "3 popsicle";
+        } else if (mapleLeafConfidence > ballConfidence && mapleLeafConfidence > popsicleConfidence) {
+            trueObjectRecognized = "2 mapleLeaves";
+        } else if (ballConfidence > mapleLeafConfidence && ballConfidence > popsicleConfidence) {
+            trueObjectRecognized = "1 ball";
+        } else if (popsicleConfidence > mapleLeafConfidence && popsicleConfidence > ballConfidence) {
+            trueObjectRecognized = "3 popsicle";
+        } else {
+            trueObjectRecognized = "2 mapleLeaves";
+        }
+        RightViperSlide.setTargetPosition(0);
+        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightViperSlide.setVelocity(2000);
         sleep(1000);
         if (!isStopRequested()) {
             drive.followTrajectorySequence(toHighJunctionPosition);
             RightViperSlide.setTargetPosition(3000);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(2000);
-            sleep(2000);
+            RightViperSlide.setVelocity(3000);
+            sleep(1000);
             drive.followTrajectory(forward);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.7);
-            sleep(2000);
+            sleep(1000);
             drive.followTrajectory(back);
             RightViperSlide.setTargetPosition(0);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(2000);
-            sleep(2500);
-            drive.followTrajectorySequence(backtoStart);
-            if (objectRecognized == "2 mapleLeaves") {
+            RightViperSlide.setVelocity(3000);
+            sleep(1000);
+            if (trueObjectRecognized == "2 mapleLeaves") {
                 drive.followTrajectory(left);
-            } else if (objectRecognized == "3 popsicle") {
-                drive.followTrajectory(right);
+            } else {
+                drive.followTrajectorySequence(backtoStart);
+                if (trueObjectRecognized == "3 popsicle") {
+                    drive.followTrajectory(right);
+                }
             }
         }
     }

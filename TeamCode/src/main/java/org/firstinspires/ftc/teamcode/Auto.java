@@ -110,7 +110,7 @@ public class Auto extends LinearOpMode {
         LeftViperSlide.setVelocity(2000);
         List<String> objectRecognizedList = new ArrayList<>();
         long start = System.currentTimeMillis();
-        long end = start + 5 * 1000;
+        long end = start + 5000;
         while (objectRecognizedList.size() < 4 && !isStopRequested() && System.currentTimeMillis() < end) {
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -126,23 +126,21 @@ public class Auto extends LinearOpMode {
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                        if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'|'+recognition.getConfidence())) {
-                            objectRecognizedList.add(recognition.getLabel()+'|'+recognition.getConfidence());
+                        if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'Z'+recognition.getConfidence())) {
+                            objectRecognizedList.add(recognition.getLabel()+'Z'+recognition.getConfidence());
                         }
                     }
                     telemetry.update();
                 }
             }
         }
-        telemetry.addData("finished", "true");
-        telemetry.update();
         RightViperSlide.setTargetPosition(0);
         LeftViperSlide.setTargetPosition(0);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
         LeftViperSlide.setVelocity(2000);
-        int x = 0;
+        int xVal = 0;
         int mapleLeavesCount = 0;
         int ballCount = 0;
         int popsicleCount = 0;
@@ -150,8 +148,10 @@ public class Auto extends LinearOpMode {
         float ballConfidence = 0;
         float popsicleConfidence = 0;
         String trueObjectRecognized = "2 mapleLeaves";
-        while (x < objectRecognizedList.size()) {
-            String[] label = objectRecognizedList.get(x).split("|");
+        telemetry.addData("size", objectRecognizedList.size());
+        telemetry.update();
+        while (xVal < objectRecognizedList.size()) {
+            String[] label = objectRecognizedList.get(xVal).split("Z");
             if(label[0].equals("2 mapleLeaves")) {
                 mapleLeavesCount += 1;
                 if(mapleLeafConfidence > Float.parseFloat(label[1])) {
@@ -162,12 +162,13 @@ public class Auto extends LinearOpMode {
                 if(ballConfidence > Float.parseFloat(label[1])) {
                     ballConfidence = Float.parseFloat(label[1]);
                 }
-            } else if(objectRecognizedList.get(x).startsWith("3 popsicle")) {
+            } else if(objectRecognizedList.get(xVal).startsWith("3 popsicle")) {
                 popsicleCount += 1;
                 if(popsicleConfidence > Float.parseFloat(label[1])) {
                     popsicleConfidence = Float.parseFloat(label[1]);
                 }
             }
+            xVal += 1;
         }
 
         if (mapleLeavesCount > ballCount && mapleLeavesCount > popsicleCount) {
@@ -185,6 +186,16 @@ public class Auto extends LinearOpMode {
         } else {
             trueObjectRecognized = "2 mapleLeaves";
         }
+        telemetry.addData("trueObjectRecognized", trueObjectRecognized);
+        telemetry.addData("MapleLeafCount", mapleLeavesCount);
+        telemetry.addData("BallCount", ballCount);
+        telemetry.addData("PopsicleCount", popsicleCount);
+        telemetry.addData("MapleLeafConfidence", mapleLeafConfidence);
+        telemetry.addData("BallConfidence", ballConfidence);
+        telemetry.addData("PopsicleConfidence", popsicleConfidence);
+        telemetry.update();
+
+
 
         if (trueObjectRecognized == "2 mapleLeaves") {
             leftFrontDrive.setPower(-0.5);
