@@ -24,7 +24,7 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "AutonomousTemp")
+@Autonomous(name = "CustomSleeveAutonomous")
 //@Disabled
 public class Auto extends LinearOpMode {
 

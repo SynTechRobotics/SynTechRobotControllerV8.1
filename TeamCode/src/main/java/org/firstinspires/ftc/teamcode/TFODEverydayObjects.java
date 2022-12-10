@@ -30,6 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.os.Environment;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -54,6 +56,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * is explained below.
  */
 @TeleOp(name = "CustomSleeve", group = "Concept")
+@Disabled
 public class TFODEverydayObjects extends LinearOpMode {
     private static final String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/cocov2.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
     private static final String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/cocov2_label_map.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
