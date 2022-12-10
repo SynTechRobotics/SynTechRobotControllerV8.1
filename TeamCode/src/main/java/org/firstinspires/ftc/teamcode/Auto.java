@@ -108,7 +108,7 @@ public class Auto extends LinearOpMode {
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
         LeftViperSlide.setVelocity(2000);
-        List<String>objectRecognizedList = new ArrayList<>();
+        List<String> objectRecognizedList = new ArrayList<>();
         long start = System.currentTimeMillis();
         long end = start + 5 * 1000;
         while (objectRecognizedList.size() < 4 && !isStopRequested() && System.currentTimeMillis() < end) {
@@ -204,7 +204,7 @@ public class Auto extends LinearOpMode {
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            sleep(1100);
+            sleep(1000);
         } else if (trueObjectRecognized == "1 ball") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(0.5);
