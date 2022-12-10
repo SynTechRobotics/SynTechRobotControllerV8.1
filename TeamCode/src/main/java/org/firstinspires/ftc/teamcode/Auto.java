@@ -194,7 +194,7 @@ public class Auto extends LinearOpMode {
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            sleep(1100);
+            sleep(1000);
         } else if (objectRecognized == "1 ball") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(0.5);
