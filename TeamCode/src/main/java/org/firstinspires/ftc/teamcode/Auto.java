@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -12,6 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -104,14 +108,15 @@ public class Auto extends LinearOpMode {
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
         LeftViperSlide.setVelocity(2000);
-        String objectRecognized = "";
-        boolean firstObjectDetected = true;
-        while (firstObjectDetected && !isStopRequested()) {
+        List<String>objectRecognizedList = new ArrayList<>();
+        long start = System.currentTimeMillis();
+        long end = start + 5 * 1000;
+        while (objectRecognizedList.size() < 4 && !isStopRequested() && System.currentTimeMillis() < end) {
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Objects Detected", updatedRecognitions.size());
-                    telemetry.addData("Object->", objectRecognized);
+                    telemetry.addData("Object->", objectRecognizedList);
                     for (Recognition recognition : updatedRecognitions) {
                         double col = (recognition.getLeft() + recognition.getRight()) / 2;
                         double row = (recognition.getTop() + recognition.getBottom()) / 2;
@@ -121,11 +126,8 @@ public class Auto extends LinearOpMode {
                         telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                         telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                         telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                        if (recognition.getLabel() != "1 ball" && recognition.getLabel() != "2 mapleLeaves" && recognition.getLabel() != "3 popsicle") {
-                            objectRecognized = "";
-                        } else if (firstObjectDetected && recognition.getConfidence() > 0.30) {
-                            objectRecognized = recognition.getLabel();
-                            firstObjectDetected = false;
+                        if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'|'+recognition.getConfidence())) {
+                            objectRecognizedList.add(recognition.getLabel()+'|'+recognition.getConfidence());
                         }
                     }
                     telemetry.update();
@@ -140,43 +142,51 @@ public class Auto extends LinearOpMode {
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
         LeftViperSlide.setVelocity(2000);
-//        leftBackDrive.setPower(0.5);
-//        leftFrontDrive.setPower(0.5);
-//        rightBackDrive.setPower(-0.5);
-//        rightFrontDrive.setPower(-0.5);
-//        sleep(500);
-//        leftFrontDrive.setPower(0);
-//        leftBackDrive.setPower(0);
-//        rightBackDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-//        leftFrontDrive.setPower(0.1);
-//        leftBackDrive.setPower(0.1);
-//        rightBackDrive.setPower(0.1);
-//        rightFrontDrive.setPower(0.1);
-//        sleep(2000);
-//        leftFrontDrive.setPower(0);
-//        leftBackDrive.setPower(0);
-//        rightBackDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-//        leftFrontDrive.setPower(-0.1);
-//        leftBackDrive.setPower(-0.1);
-//        rightBackDrive.setPower(-0.1);
-//        rightFrontDrive.setPower(-0.1);
-//        sleep(2000);
-//        leftFrontDrive.setPower(0);
-//        leftBackDrive.setPower(0);
-//        rightBackDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-//        leftBackDrive.setPower(-0.5);
-//        leftFrontDrive.setPower(-0.5);
-//        rightBackDrive.setPower(0.5);
-//        rightFrontDrive.setPower(0.5);
-//        sleep(500);
-//        leftFrontDrive.setPower(0);
-//        leftBackDrive.setPower(0);
-//        rightBackDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-        if (objectRecognized == "2 mapleLeaves") {
+        int x = 0;
+        int mapleLeavesCount = 0;
+        int ballCount = 0;
+        int popsicleCount = 0;
+        float mapleLeafConfidence = 0;
+        float ballConfidence = 0;
+        float popsicleConfidence = 0;
+        String trueObjectRecognized = "2 mapleLeaves";
+        while (x < objectRecognizedList.size()) {
+            String[] label = objectRecognizedList.get(x).split("|");
+            if(label[0].equals("2 mapleLeaves")) {
+                mapleLeavesCount += 1;
+                if(mapleLeafConfidence > Float.parseFloat(label[1])) {
+                    mapleLeafConfidence = Float.parseFloat(label[1]);
+                }
+            } else if(label[0].equals("1 ball")) {
+                ballCount += 1;
+                if(ballConfidence > Float.parseFloat(label[1])) {
+                    ballConfidence = Float.parseFloat(label[1]);
+                }
+            } else if(objectRecognizedList.get(x).startsWith("3 popsicle")) {
+                popsicleCount += 1;
+                if(popsicleConfidence > Float.parseFloat(label[1])) {
+                    popsicleConfidence = Float.parseFloat(label[1]);
+                }
+            }
+        }
+
+        if (mapleLeavesCount > ballCount && mapleLeavesCount > popsicleCount) {
+            trueObjectRecognized = "2 mapleLeaves";
+        } else if (ballCount > mapleLeavesCount && ballCount > popsicleCount) {
+            trueObjectRecognized = "1 ball";
+        } else if (popsicleCount > mapleLeavesCount && popsicleCount > ballCount) {
+            trueObjectRecognized = "3 popsicle";
+        } else if (mapleLeafConfidence > ballConfidence && mapleLeafConfidence > popsicleConfidence) {
+            trueObjectRecognized = "2 mapleLeaves";
+        } else if (ballConfidence > mapleLeafConfidence && ballConfidence > popsicleConfidence) {
+            trueObjectRecognized = "1 ball";
+        } else if (popsicleConfidence > mapleLeafConfidence && popsicleConfidence > ballConfidence) {
+            trueObjectRecognized = "3 popsicle";
+        } else {
+            trueObjectRecognized = "2 mapleLeaves";
+        }
+
+        if (trueObjectRecognized == "2 mapleLeaves") {
             leftFrontDrive.setPower(-0.5);
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(-0.5);
@@ -195,7 +205,7 @@ public class Auto extends LinearOpMode {
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
             sleep(1100);
-        } else if (objectRecognized == "1 ball") {
+        } else if (trueObjectRecognized == "1 ball") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
@@ -210,7 +220,7 @@ public class Auto extends LinearOpMode {
             rightBackDrive.setPower(-0.5);
             rightFrontDrive.setPower(-0.5);
             sleep(1000);
-        } else if (objectRecognized == "3 popsicle") {
+        } else if (trueObjectRecognized == "3 popsicle") {
             leftFrontDrive.setPower(0.5);
             leftBackDrive.setPower(-0.5);
             rightBackDrive.setPower(0.5);

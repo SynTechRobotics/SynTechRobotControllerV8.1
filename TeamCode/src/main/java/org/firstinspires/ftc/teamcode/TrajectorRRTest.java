@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.provider.Settings;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -46,33 +49,34 @@ public class TrajectorRRTest extends LinearOpMode {
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Pose2d startPose = new Pose2d(0, 0, 0);
-
+        Pose2d afterPositioning = new Pose2d(28.5, 25, 0);
+        Pose2d afterForward = new Pose2d(38.5, 25, 0);
+        Pose2d afterBacktoStart = new Pose2d(38.5, 0, 0);
         drive.setPoseEstimate(startPose);
-        Trajectory forward = drive.trajectoryBuilder(startPose)
-                .forward(10)
+        Trajectory forward = drive.trajectoryBuilder(afterPositioning)
+                .lineToConstantHeading(new Vector2d(38.5, 25))
                 .build();
 
-        Trajectory back = drive.trajectoryBuilder(startPose)
-                .back(10)
+        Trajectory back = drive.trajectoryBuilder(afterForward)
+                .lineToConstantHeading(new Vector2d(28.5, 25))
                 .build();
 
         TrajectorySequence toHighJunctionPosition = drive.trajectorySequenceBuilder(startPose)
-                .forward(4.5)
-                .forward(48)
+                .lineToConstantHeading(new Vector2d(52.5, 0))
                 .back(24)
                 .strafeLeft(25)
                 .build();
 
-        TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(startPose)
-                .strafeRight(25)
+        TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(afterPositioning)
+                .lineToConstantHeading(new Vector2d(38.5, 0))
                 .build();
 
-        Trajectory left = drive.trajectoryBuilder(startPose)
-                .strafeLeft(48)
+        Trajectory left = drive.trajectoryBuilder(afterBacktoStart)
+                .lineToConstantHeading(new Vector2d(38.5, 48))
                 .build();
 
-        Trajectory right = drive.trajectoryBuilder(startPose)
-                .strafeRight(48)
+        Trajectory right = drive.trajectoryBuilder(afterBacktoStart)
+                .lineToConstantHeading(new Vector2d(38.5, -48))
                 .build();
 
         initVuforia();
