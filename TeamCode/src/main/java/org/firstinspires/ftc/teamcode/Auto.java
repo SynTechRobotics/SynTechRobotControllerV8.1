@@ -97,7 +97,7 @@ public class Auto extends LinearOpMode {
         waitForStart();
           clawLeft.setPosition(0.0);
           clawRight.setPosition(0.2);
-          sleep(500);
+          sleep(1500);
         RightViperSlide.setTargetPosition(1000);
         LeftViperSlide.setTargetPosition(-1000);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
