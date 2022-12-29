@@ -22,25 +22,19 @@ public class ValueFiddler extends LinearOpMode {
             // This ensures all the powers maintain the same ratio, but only when
             // at least on
             if (gamepad1.right_bumper) {
-                while (gamepad1.right_bumper) {
-                    sleep(1);
-                }
                 position += 1;
+                sleep(500);
             } else if (gamepad1.left_bumper) {
-                while (gamepad1.left_bumper) {
-                    sleep(1);
-                }
                 position -= 1;
+                sleep(500);
             }
             if (gamepad1.a) {
-                while (gamepad2.a) {
-                    sleep(1);
-                }
                 if (chosenServoIsFlip) {
                     chosenServoIsFlip = false;
                 } else {
                     chosenServoIsFlip = true;
                 }
+                sleep(500);
             }
             if (chosenServoIsFlip) {
                 clawFlip.setPosition(position/10);
@@ -49,6 +43,8 @@ public class ValueFiddler extends LinearOpMode {
             }
             telemetry.addData("ClawTurnPosition", clawTurn.getPosition());
             telemetry.addData("ClawFlipPosition", clawFlip.getPosition());
+            telemetry.addData("ClawFlipClosen", chosenServoIsFlip);
+            telemetry.addData("position", position);
             telemetry.update();
         }
     }
