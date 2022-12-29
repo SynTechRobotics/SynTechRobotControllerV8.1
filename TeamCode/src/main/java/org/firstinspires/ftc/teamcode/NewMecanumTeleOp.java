@@ -26,7 +26,8 @@ public class NewMecanumTeleOp extends LinearOpMode {
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideLeft");
+        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideRight");
+        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideLeft");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -116,17 +117,18 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
             if (prevposition != position) {
 //                LeftViperSlide.setTargetPosition(-position-200);
-                RightViperSlide.setTargetPosition(position);
+                RightViperSlide.setTargetPosition(-position);
+                LeftViperSlide.setTargetPosition(position);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 prevposition = position;
                 if (bool1) {
                     RightViperSlide.setVelocity(2750);
-//                    LeftViperSlide.setVelocity(2750);
+                    LeftViperSlide.setVelocity(2750);
                     bool1 = false;
                 } else {
                     RightViperSlide.setVelocity(2500);
-//                    LeftViperSlide.setVelocity(2500);
+                    LeftViperSlide.setVelocity(2500);
                 }
             }
 
@@ -163,14 +165,14 @@ public class NewMecanumTeleOp extends LinearOpMode {
                     }
                     sleep(80);
                 }
-//                LeftViperSlide.setTargetPosition(-position-200);
-                RightViperSlide.setTargetPosition(position);
+                LeftViperSlide.setTargetPosition(position);
+                RightViperSlide.setTargetPosition(-position);
 //                TimeUnit.MILLISECONDS.sleep(10);
                 prevInterval = System.currentTimeMillis();
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(1500);
-//                LeftViperSlide.setVelocity(1500);
+                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RightViperSlide.setVelocity(1800);
+                LeftViperSlide.setVelocity(1800);
             }
 
 
