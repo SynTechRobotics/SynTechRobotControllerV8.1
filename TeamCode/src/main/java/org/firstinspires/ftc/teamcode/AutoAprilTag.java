@@ -82,7 +82,9 @@ public class AutoAprilTag extends LinearOpMode
         });
 
         telemetry.setMsTransmissionInterval(50);
-        String finalDetection = new String();
+        String finalDetectionHashCode = new String();
+        String finalDetectionPose = new String();
+        String finalDetectionId = new String();
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
@@ -91,13 +93,19 @@ public class AutoAprilTag extends LinearOpMode
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (currentDetections.size() != 0 ) {
-                finalDetection = String.valueOf(currentDetections.get(0));
+                finalDetectionHashCode = String.valueOf(currentDetections.get(0).hashCode());
+                finalDetectionPose = String.valueOf(currentDetections.get(0).pose);
+                finalDetectionId = String.valueOf(currentDetections.get(0).id);
                 break;
             }
             sleep(20);
         }
-        telemetry.addData("FinalDetection", finalDetection);
-        telemetry.update();
+        while (!isStopRequested()) {
+            telemetry.addData("HashCode", finalDetectionHashCode);
+            telemetry.addData("ID", finalDetectionId);
+            telemetry.addData("Pose", finalDetectionPose);
+            telemetry.update();
+        }
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
     }
