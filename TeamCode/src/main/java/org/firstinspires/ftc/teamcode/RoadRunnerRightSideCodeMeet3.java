@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name="AutonomousRoadRunner")
+@Autonomous(name="AutonomousRoadRunner2")
 public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "FullCone1209.tflite";
 
