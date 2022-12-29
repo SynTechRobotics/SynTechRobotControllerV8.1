@@ -106,7 +106,7 @@ public class AutoAprilTag extends LinearOpMode
             telemetry.addData("Pose", finalDetectionPose);
             telemetry.update();
         }
-
+        sleep(10000);
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
     }
 
