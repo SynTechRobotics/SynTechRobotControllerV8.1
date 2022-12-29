@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.provider.Settings;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -16,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name="AutonomousRoadRunner")
-public class TrajectorRRTest extends LinearOpMode {
+public class RoadRunnerLeftSideCodeMeet2 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "FullCone1209.tflite";
 
     private static final String[] LABELS = {
@@ -50,26 +47,26 @@ public class TrajectorRRTest extends LinearOpMode {
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Pose2d startPose = new Pose2d(0, 0, 0);
-        Pose2d afterPositioning = new Pose2d(28.5, 25, 0);
+        Pose2d afterPositioning = new Pose2d(28.5, -27, 0);
         Pose2d afterForward = new Pose2d(36.5, 25, 0);
         Pose2d afterBacktoStart = new Pose2d(38.5, 0, 0);
         drive.setPoseEstimate(startPose);
         Trajectory forward = drive.trajectoryBuilder(afterPositioning)
-                .lineToConstantHeading(new Vector2d(35, 25))
+                .forward(6.5)
                 .build();
 
         Trajectory back = drive.trajectoryBuilder(afterForward)
-                .lineToConstantHeading(new Vector2d(29.5, 25))
+                .back(6.5)
                 .build();
 
         TrajectorySequence toHighJunctionPosition = drive.trajectorySequenceBuilder(startPose)
-                .lineToConstantHeading(new Vector2d(52.5, 0))
+                .forward(52.5)
                 .back(24)
-                .strafeLeft(27)
+                .strafeRight(27)
                 .build();
 
         TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(afterPositioning)
-                .strafeRight(27)
+                .strafeLeft(27)
                 .build();
 
         Trajectory left = drive.trajectoryBuilder(afterPositioning)
