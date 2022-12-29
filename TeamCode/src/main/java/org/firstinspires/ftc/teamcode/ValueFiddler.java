@@ -11,8 +11,8 @@ public class ValueFiddler extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        Servo clawFlip = hardwareMap.servo.get("clwFlip");
-        Servo clawTurn = hardwareMap.servo.get("clwTurn");
+        Servo clawFlip = hardwareMap.servo.get("clawFlipper");
+        Servo clawTurn = hardwareMap.servo.get("clawTurner");
         int position = 0;
         boolean chosenServoIsFlip = false;
         waitForStart();

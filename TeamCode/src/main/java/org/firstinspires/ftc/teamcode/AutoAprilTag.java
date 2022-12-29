@@ -87,10 +87,10 @@ public class AutoAprilTag extends LinearOpMode
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-        while (true)
+        while (!isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-            if (currentDetections.size() != 0) {
+            if (currentDetections.size() != 0 ) {
                 finalDetection = String.valueOf(currentDetections.get(0));
                 break;
             }
