@@ -43,7 +43,7 @@ public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
         RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Pose2d startPose = new Pose2d(0, 0, 0);
-        drive.setPoseEstimate(startPose);
+        drive.setPoseEstimate(new Pose2d(-60, -36, 0));
 
         TrajectorySequence fullTrajectory = drive.trajectorySequenceBuilder(new Pose2d(-60, -36, 0))
                 .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(90)))
@@ -101,37 +101,36 @@ public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
         RightViperSlide.setVelocity(2000);
         sleep(1000);
         if (!isStopRequested()) {
-            drive.followTrajectorySequence(toConeStackPosition);
-            RightViperSlide.setTargetPosition(4100);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3500);
-            sleep(2000);
-            drive.followTrajectory(toHighJunctionPosition);
-            clawLeft.setPosition(0.5);
-            clawRight.setPosition(0.7);
-            sleep(1000);
-            int x = 1;
-            while (x <= 3) {
-                drive.followTrajectory(backtoConeStack);
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3500);
-                sleep(1000);
-                clawLeft.setPosition(0);
-                clawRight.setPosition(0.2);
-                sleep(1000);
-                RightViperSlide.setTargetPosition(4100);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3500);
-                sleep(1000);
-                drive.followTrajectory(toHighJunctionPosition);
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.7);
-                sleep(1000);
-                x++;
-            }
-
-
+            drive.followTrajectorySequence(fullTrajectory);
+//            drive.followTrajectorySequence(toConeStackPosition);
+//            RightViperSlide.setTargetPosition(4100);
+//            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setVelocity(3500);
+//            sleep(2000);
+//            drive.followTrajectory(toHighJunctionPosition);
+//            clawLeft.setPosition(0.5);
+//            clawRight.setPosition(0.7);
+//            sleep(1000);
+//            int x = 1;
+//            while (x <= 3) {
+//                drive.followTrajectory(backtoConeStack);
+//                RightViperSlide.setTargetPosition(0);
+//                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                RightViperSlide.setVelocity(3500);
+//                sleep(1000);
+//                clawLeft.setPosition(0);
+//                clawRight.setPosition(0.2);
+//                sleep(1000);
+//                RightViperSlide.setTargetPosition(4100);
+//                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                RightViperSlide.setVelocity(3500);
+//                sleep(1000);
+//                drive.followTrajectory(toHighJunctionPosition);
+//                clawLeft.setPosition(0.5);
+//                clawRight.setPosition(0.7);
+//                sleep(1000);
+//                x++;
+//            }
         }
     }
     private void initVuforia() {
