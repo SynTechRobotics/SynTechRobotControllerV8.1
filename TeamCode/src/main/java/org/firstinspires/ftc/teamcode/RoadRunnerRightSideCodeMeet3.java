@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="AutonomousRoadRunner2")
+@Autonomous
 public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "FullCone1209.tflite";
 
