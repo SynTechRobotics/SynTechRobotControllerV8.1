@@ -12,13 +12,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Autonomous(name="AutonomousRoadRunner2")
 public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
@@ -49,6 +45,17 @@ public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
         Pose2d startPose = new Pose2d(0, 0, 0);
         drive.setPoseEstimate(startPose);
 
+        TrajectorySequence fullTrajectory = drive.trajectorySequenceBuilder(new Pose2d(-60, -36, 0))
+                .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-12, -36, Math.toRadians(270)))
+                .forward(24)
+                .back(24)
+                .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-12, -36, Math.toRadians(270)))
+                .forward(24)
+                .back(24)
+                .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(90)))
+                .build();
 
         TrajectorySequence toConeStackPosition = drive.trajectorySequenceBuilder(startPose)
                 .forward(48)
@@ -89,85 +96,6 @@ public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
         waitForStart();
         clawLeft.setPosition(0);
         clawRight.setPosition(0.2);
-        sleep(1000);
-        RightViperSlide.setTargetPosition(1000);
-        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightViperSlide.setVelocity(2000);
-        List<String> objectRecognizedList = new ArrayList<>();
-        long start = System.currentTimeMillis();
-        long end = start + 3000;
-        while (objectRecognizedList.size() < 4 && !isStopRequested() && System.currentTimeMillis() < end) {
-            if (tfod != null) {
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-//                    telemetry.addData("# Objects Detected", updatedRecognitions.size());
-//                    telemetry.addData("Object->", objectRecognizedList);
-                    for (Recognition recognition : updatedRecognitions) {
-                        double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                        double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                        double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                        double height = Math.abs(recognition.getTop() - recognition.getBottom());
-//                        telemetry.addData("", " ");
-//                        telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-//                        telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-//                        telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                        if (recognition.getConfidence() > 0.60 && !objectRecognizedList.contains(recognition.getLabel()+'Z'+recognition.getConfidence())) {
-                            objectRecognizedList.add(recognition.getLabel()+'Z'+recognition.getConfidence());
-                        }
-                    }
-//                    telemetry.update();
-                }
-            }
-        }
-        RightViperSlide.setTargetPosition(0);
-        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightViperSlide.setVelocity(2000);
-        int xVal = 0;
-        int mapleLeavesCount = 0;
-        int ballCount = 0;
-        int popsicleCount = 0;
-        float mapleLeafConfidence = 0;
-        float ballConfidence = 0;
-        float popsicleConfidence = 0;
-        String trueObjectRecognized = "2 mapleLeaves";
-        while (xVal < objectRecognizedList.size()) {
-            String[] label = objectRecognizedList.get(xVal).split("Z");
-            if(label[0].equals("2 mapleLeaves")) {
-                mapleLeavesCount += 1;
-                if(mapleLeafConfidence > Float.parseFloat(label[1])) {
-                    mapleLeafConfidence = Float.parseFloat(label[1]);
-                }
-            } else if(label[0].equals("1 ball")) {
-                ballCount += 1;
-                if(ballConfidence > Float.parseFloat(label[1])) {
-                    ballConfidence = Float.parseFloat(label[1]);
-                }
-            } else if(objectRecognizedList.get(xVal).startsWith("3 popsicle")) {
-                popsicleCount += 1;
-                if(popsicleConfidence > Float.parseFloat(label[1])) {
-                    popsicleConfidence = Float.parseFloat(label[1]);
-                }
-            }
-            xVal += 1;
-        }
-
-        if (mapleLeavesCount > ballCount && mapleLeavesCount > popsicleCount) {
-            trueObjectRecognized = "2 mapleLeaves";
-        } else if (ballCount > mapleLeavesCount && ballCount > popsicleCount) {
-            trueObjectRecognized = "1 ball";
-        } else if (popsicleCount > mapleLeavesCount && popsicleCount > ballCount) {
-            trueObjectRecognized = "3 popsicle";
-        } else if (mapleLeafConfidence > ballConfidence && mapleLeafConfidence > popsicleConfidence) {
-            trueObjectRecognized = "2 mapleLeaves";
-        } else if (ballConfidence > mapleLeafConfidence && ballConfidence > popsicleConfidence) {
-            trueObjectRecognized = "1 ball";
-        } else if (popsicleConfidence > mapleLeafConfidence && popsicleConfidence > ballConfidence) {
-            trueObjectRecognized = "3 popsicle";
-        } else {
-            trueObjectRecognized = "2 mapleLeaves";
-        }
-        telemetry.addData("trueObjectRecognized", trueObjectRecognized);
-        telemetry.update();
         RightViperSlide.setTargetPosition(0);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
@@ -203,14 +131,7 @@ public class RoadRunnerRightSideCodeMeet3 extends LinearOpMode {
                 x++;
             }
 
-            if (trueObjectRecognized == "2 mapleLeaves") {
 
-            } else {
-                drive.followTrajectorySequence(backtoStart);
-                if (trueObjectRecognized == "3 popsicle") {
-                    drive.followTrajectory(right);
-                }
-            }
         }
     }
     private void initVuforia() {
