@@ -80,7 +80,7 @@ public class MecanumTeleOp extends LinearOpMode {
             // servo2.setDirection(Servo.Direction.REVERSE);
             double y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
             double x = 0.5*gamepad1.left_stick_x * 1.0; // Counteract imperfect strafing
-            double rx = 0.5*gamepad1.right_stick_x;
+            double rx = 0.75*gamepad1.right_stick_x;
             /*
              Denominator is the largest motor power (absolute value) or 1
              This ensures all the powers maintain the same ratio, but only when
@@ -125,7 +125,7 @@ public class MecanumTeleOp extends LinearOpMode {
 //                    LeftViperSlide.setVelocity(2750);
                     bool1 = false;
                 } else {
-                    RightViperSlide.setVelocity(2500);
+                    RightViperSlide.setVelocity(2750);
 //                    LeftViperSlide.setVelocity(2500);
                 }
             }

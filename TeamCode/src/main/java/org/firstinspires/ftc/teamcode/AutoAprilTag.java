@@ -21,10 +21,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -88,6 +96,41 @@ public class AutoAprilTag extends LinearOpMode
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
+
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        Servo clawLeft = hardwareMap.servo.get("clwleft");
+        Servo clawRight = hardwareMap.servo.get("clwright");
+        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
+        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Pose2d startPose = new Pose2d(0, 0, 0);
+        drive.setPoseEstimate(startPose);
+
+
+        TrajectorySequence toConeStackPosition = drive.trajectorySequenceBuilder(startPose)
+                .forward(48)
+                .turn(Math.toRadians(90))
+                .build();
+
+        Trajectory toHighJunctionPosition = drive.trajectoryBuilder(startPose)
+                .strafeRight(12)
+                .build();
+
+        Trajectory backtoConeStack = drive.trajectoryBuilder(startPose)
+                .strafeLeft(12)
+                .build();
+
+        TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(startPose)
+                .strafeLeft(27)
+                .build();
+
+        Trajectory left = drive.trajectoryBuilder(startPose)
+                .lineToConstantHeading(new Vector2d(28.5, 53))
+                .build();
+
+        Trajectory right = drive.trajectoryBuilder(startPose)
+                .lineToConstantHeading(new Vector2d(40, -47))
+                .build();
+
         waitForStart();
         while (!isStopRequested())
         {
@@ -100,14 +143,49 @@ public class AutoAprilTag extends LinearOpMode
             }
             sleep(20);
         }
-        while (!isStopRequested()) {
-            telemetry.addData("HashCode", finalDetectionHashCode);
-            telemetry.addData("ID", finalDetectionId);
-            telemetry.addData("Pose", finalDetectionPose);
-            telemetry.update();
-        }
 
+        sleep(10000);
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
+        if (!isStopRequested()) {
+            drive.followTrajectorySequence(toConeStackPosition);
+            RightViperSlide.setTargetPosition(4100);
+            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RightViperSlide.setVelocity(3500);
+            sleep(2000);
+            drive.followTrajectory(toHighJunctionPosition);
+            clawLeft.setPosition(0.5);
+            clawRight.setPosition(0.7);
+            sleep(1000);
+            int x = 1;
+            while (x <= 3) {
+                drive.followTrajectory(backtoConeStack);
+                RightViperSlide.setTargetPosition(0);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RightViperSlide.setVelocity(3500);
+                sleep(1000);
+                clawLeft.setPosition(0);
+                clawRight.setPosition(0.2);
+                sleep(1000);
+                RightViperSlide.setTargetPosition(4100);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RightViperSlide.setVelocity(3500);
+                sleep(1000);
+                drive.followTrajectory(toHighJunctionPosition);
+                clawLeft.setPosition(0.5);
+                clawRight.setPosition(0.7);
+                sleep(1000);
+                x++;
+            }
+
+            if (finalDetectionId == "14") {
+
+            } else {
+                drive.followTrajectorySequence(backtoStart);
+                if (finalDetectionId == "16") {
+                    drive.followTrajectory(right);
+                }
+            }
+        }
     }
 
     void tagToTelemetry(AprilTagDetection detection)

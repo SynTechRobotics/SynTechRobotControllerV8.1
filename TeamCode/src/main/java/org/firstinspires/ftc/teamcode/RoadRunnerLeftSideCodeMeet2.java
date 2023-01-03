@@ -90,7 +90,7 @@ public class RoadRunnerLeftSideCodeMeet2 extends LinearOpMode {
         clawLeft.setPosition(0);
         clawRight.setPosition(0.2);
         sleep(1000);
-        RightViperSlide.setTargetPosition(1000);
+        RightViperSlide.setTargetPosition(-1000);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2000);
         List<String> objectRecognizedList = new ArrayList<>();
@@ -174,7 +174,7 @@ public class RoadRunnerLeftSideCodeMeet2 extends LinearOpMode {
         sleep(1000);
         if (!isStopRequested()) {
             drive.followTrajectorySequence(toHighJunctionPosition);
-            RightViperSlide.setTargetPosition(3000);
+            RightViperSlide.setTargetPosition(-3000);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             RightViperSlide.setVelocity(3000);
             sleep(1000);
