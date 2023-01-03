@@ -42,6 +42,8 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
         Servo clawLeft = hardwareMap.servo.get("clawLeft");
         Servo clawRight = hardwareMap.servo.get("clawRight");
+        Servo clawTurner = hardwareMap.servo.get("clawTurner");
+        Servo clawFlipper = hardwareMap.servo.get("clawFlipper");
         clawRight.setDirection(Servo.Direction.REVERSE);
 
 //        clawLeft.setPosition(0.1);
