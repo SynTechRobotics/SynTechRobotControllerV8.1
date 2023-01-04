@@ -22,11 +22,15 @@ public class NewMecanumTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideLeft");
+//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+//        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
+//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
+        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -39,8 +43,8 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        Servo clawLeft = hardwareMap.servo.get("clawLeft");
-        Servo clawRight = hardwareMap.servo.get("clawRight");
+        Servo clawLeft = hardwareMap.servo.get("clwleft");
+        Servo clawRight = hardwareMap.servo.get("clwright");
         clawRight.setDirection(Servo.Direction.REVERSE);
 
 //        clawLeft.setPosition(0.1);
