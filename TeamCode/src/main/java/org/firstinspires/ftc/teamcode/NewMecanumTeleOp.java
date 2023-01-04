@@ -31,12 +31,9 @@ public class NewMecanumTeleOp extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
         DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideRight");
-        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideLeft");
+        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
         // Servo servo3 = hardwareMap.servo.get("servo 3");
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -55,6 +52,10 @@ public class NewMecanumTeleOp extends LinearOpMode {
 //        Servo clawRight = hardwareMap.servo.get("clawRight");
 //        Servo clawTurner = hardwareMap.servo.get("clawTurner");
 //        Servo clawFlipper = hardwareMap.servo.get("clawFlipper");
+//        Servo clawLeft = hardwareMap.servo.get("clawLeft");
+//        Servo clawRight = hardwareMap.servo.get("clawRight");
+        Servo clawTurner = hardwareMap.servo.get("clawTurner");
+        Servo clawFlipper = hardwareMap.servo.get("clawFlipper");
         clawRight.setDirection(Servo.Direction.REVERSE);
 
 //        clawLeft.setPosition(0.1);
