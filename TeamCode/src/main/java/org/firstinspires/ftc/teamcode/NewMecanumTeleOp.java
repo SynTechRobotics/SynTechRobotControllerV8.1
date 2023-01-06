@@ -102,13 +102,13 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1700;
+                position = 1650;
             }
             if(gamepad1.y && useButtons) {
-                position = 3000;
+                position = 2950;
             }
             if(gamepad1.b && useButtons) {
-                position = 4100;
+                position = 4050;
             }
             if(gamepad1.a && useButtons) {
                 goFast = true;
