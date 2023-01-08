@@ -119,7 +119,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(4)
                 .strafeLeft(13.5)
-                .forward(24.5)
+                .forward(22)
                 .build();
 
         TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
