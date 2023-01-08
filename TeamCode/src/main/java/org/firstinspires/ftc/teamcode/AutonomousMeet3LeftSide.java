@@ -22,8 +22,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,12 +39,11 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class AutoAprilTag extends LinearOpMode
+public class AutonomousMeet3LeftSide extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
-    static final double FEET_PER_METER = 3.28084;
 
     // Lens intrinsics
     // UNITS ARE PIXELS
@@ -92,110 +89,116 @@ public class AutoAprilTag extends LinearOpMode
         telemetry.setMsTransmissionInterval(50);
         String finalDetectionHashCode = new String();
         String finalDetectionPose = new String();
-        String finalDetectionId = new String();
+        int finalDetectionId = 0;
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
-        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
-        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Pose2d startPose = new Pose2d(0, 0, 0);
+        clawRight.setDirection(Servo.Direction.REVERSE);
+        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
+        LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Pose2d startPose = new Pose2d(-60, -36, 0);
         drive.setPoseEstimate(startPose);
+        int correctHeight = 600;
 
-
-        TrajectorySequence toConeStackPosition = drive.trajectorySequenceBuilder(startPose)
-                .forward(48)
+        TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
+                .forward(4)
                 .turn(Math.toRadians(90))
+                .strafeRight(40)
+                .forward(4)
                 .build();
 
-        Trajectory toHighJunctionPosition = drive.trajectoryBuilder(startPose)
-                .strafeRight(12)
-                .build();
-
-        Trajectory backtoConeStack = drive.trajectoryBuilder(startPose)
+        TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
+                .back(4)
+                .strafeRight(25)
                 .strafeLeft(12)
+                .forward(24.75)
                 .build();
 
-        TrajectorySequence backtoStart = drive.trajectorySequenceBuilder(startPose)
-                .strafeLeft(27)
+        TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
+                .back(4)
+                .strafeRight(13.5)
+                .forward(24.5)
                 .build();
 
-        Trajectory left = drive.trajectoryBuilder(startPose)
-                .lineToConstantHeading(new Vector2d(28.5, 53))
+        TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
+                .back(24.75)
+                .strafeLeft(14)
+                .forward(4)
                 .build();
 
-        Trajectory right = drive.trajectoryBuilder(startPose)
-                .lineToConstantHeading(new Vector2d(40, -47))
+        TrajectorySequence toMiddlePosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
+                .back(4)
+                .strafeRight(13.5)
+                .build();
+
+        TrajectorySequence toRightPosition = drive.trajectorySequenceBuilder(secondToLowJunctionPos.end())
+                .back(4)
+                .strafeRight(13.5)
+                .back(24.75)
                 .build();
 
         waitForStart();
-        while (!isStopRequested())
-        {
+        clawLeft.setPosition(0);
+        clawRight.setPosition(0.7);
+        sleep(1000);
+        LeftViperSlide.setTargetPosition(500);
+        LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftViperSlide.setVelocity(2500);
+        while (!isStopRequested()) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (currentDetections.size() != 0 ) {
-                finalDetectionHashCode = String.valueOf(currentDetections.get(0).hashCode());
-                finalDetectionPose = String.valueOf(currentDetections.get(0).pose);
-                finalDetectionId = String.valueOf(currentDetections.get(0).id);
+                finalDetectionId = currentDetections.get(0).id;
                 break;
             }
-            sleep(20);
         }
-
-        sleep(10000);
+        telemetry.addData("foundTag", "_" + String.valueOf(finalDetectionId) + "_");
+        telemetry.update();
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         if (!isStopRequested()) {
-            drive.followTrajectorySequence(toConeStackPosition);
-            RightViperSlide.setTargetPosition(4100);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3500);
-            sleep(2000);
-            drive.followTrajectory(toHighJunctionPosition);
+            LeftViperSlide.setTargetPosition(1700);
+            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LeftViperSlide.setVelocity(3000);
+            drive.followTrajectorySequence(firstToLowJunctionPos);
             clawLeft.setPosition(0.5);
+            clawRight.setPosition(0.2);
+            sleep(1000);
+            LeftViperSlide.setTargetPosition(600);
+            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            LeftViperSlide.setVelocity(3000);
+            drive.followTrajectorySequence(firstToConeStackPosition);
+            clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
             sleep(1000);
             int x = 1;
-            while (x <= 3) {
-                drive.followTrajectory(backtoConeStack);
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3500);
-                sleep(1000);
-                clawLeft.setPosition(0);
+                // Back a bit
+                LeftViperSlide.setTargetPosition(1700);
+                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LeftViperSlide.setVelocity(2000);
+                sleep(500);
+                drive.followTrajectorySequence(secondToLowJunctionPos);
+                // Dropping the cone and grabbing another one
+                clawLeft.setPosition(0.5);
                 clawRight.setPosition(0.2);
                 sleep(1000);
-                RightViperSlide.setTargetPosition(4100);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3500);
-                sleep(1000);
-                drive.followTrajectory(toHighJunctionPosition);
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.7);
-                sleep(1000);
-                x++;
-            }
-
-            if (finalDetectionId == "14") {
-
-            } else {
-                drive.followTrajectorySequence(backtoStart);
-                if (finalDetectionId == "16") {
-                    drive.followTrajectory(right);
+                if (finalDetectionId == 14) {
+                    LeftViperSlide.setTargetPosition(450);
+                    LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LeftViperSlide.setVelocity(3000);
+                    drive.followTrajectorySequence(toRightPosition);
+                } else if (finalDetectionId == 15) {
+                    LeftViperSlide.setTargetPosition(450);
+                    LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LeftViperSlide.setVelocity(3000);
+                    drive.followTrajectorySequence(toMiddlePosition);
+                } else if (finalDetectionId == 16){
+                    LeftViperSlide.setTargetPosition(450);
+                    LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LeftViperSlide.setVelocity(3000);
+                    drive.followTrajectorySequence(secondToConeStackPosition);
                 }
-            }
-        }
-    }
 
-    void tagToTelemetry(AprilTagDetection detection)
-    {
-        telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+        }
     }
 }
