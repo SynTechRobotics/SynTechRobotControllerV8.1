@@ -68,7 +68,7 @@ public class MecanumTeleOp extends LinearOpMode {
         boolean useButtons = true;
         int savedPosition = 0;
         boolean bool1 = true;
-        boolean clawOpen = false;
+            boolean clawOpen = false;
         long prevInterval = starttime;
         int position = 0;
         int prevposition = 0;
