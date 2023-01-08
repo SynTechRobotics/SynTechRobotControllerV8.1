@@ -79,9 +79,9 @@ public class NewMecanumTeleOp extends LinearOpMode {
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
             // servo2.setDirection(Servo.Direction.REVERSE);
-            double y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = 0.5*gamepad1.left_stick_x * 1.0; // Counteract imperfect strafing
-            double rx = 0.5*gamepad1.right_stick_x;
+            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double rx = gamepad1.right_stick_x;
             /*
              Denominator is the largest motor power (absolute value) or 1
              This ensures all the powers maintain the same ratio, but only when
@@ -111,7 +111,7 @@ public class NewMecanumTeleOp extends LinearOpMode {
                 position = 4050;
             }
             if(gamepad1.a && useButtons) {
-                goFast = true;
+                goSlow = false;
                 position = 0;
             }
 
@@ -122,16 +122,13 @@ public class NewMecanumTeleOp extends LinearOpMode {
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 prevposition = position;
                 if (goSlow) {
-                    RightViperSlide.setVelocity(1800);
-                    LeftViperSlide.setVelocity(1800);
+                    RightViperSlide.setVelocity(2000);
+                    LeftViperSlide.setVelocity(2000);
                     goSlow = false;
-                } else if (goFast) {
-                    RightViperSlide.setVelocity(2750);
-                    LeftViperSlide.setVelocity(2750);
-                    goFast = false;
                 } else {
-                    RightViperSlide.setVelocity(2500);
-                    LeftViperSlide.setVelocity(2500);
+                    RightViperSlide.setVelocity(3500);
+                    LeftViperSlide.setVelocity(3500);
+
                 }
             }
 
@@ -153,43 +150,53 @@ public class NewMecanumTeleOp extends LinearOpMode {
                 useIncrements = false;
             }
             */
-                if (gamepad1.dpad_up || gamepad1.dpad_down) {
-                    if (gamepad1.dpad_up) {
-                        position += 150;
-                        if (position > 3000) {
-                            position = 3000;
-                        }
-                        sleep(80);
-                    }
-                    if (gamepad1.dpad_down && position > 0) {
-                        position -= 150;
-                        if (position < 0) {
-                            position = 0;
-                        }
-                        sleep(80);
-                    }
-                    goSlow = true;
-//                    LeftViperSlide.setTargetPosition(position);
-//                    RightViperSlide.setTargetPosition(-position);
-    //                TimeUnit.MILLISECONDS.sleep(10);
-//                    prevInterval = System.currentTimeMillis();
-//                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                    LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                    RightViperSlide.setVelocity(1800);
-//                    LeftViperSlide.setVelocity(1800);
+//            if (gamepad1.dpad_up) {
+//                position += 150;
+//                if (position > 3000) {
+//                    position = 3000;
+//                }
+//                sleep(80);
+//            }
+//            if (gamepad1.dpad_down && position > 0) {
+//                position -= 150;
+//                if (position < 0) {
+//                    position = 0;
+//                }
+//                sleep(80);
+//            }
+//            goSlow = true;
 
-                }
+
+
+            if (gamepad1.dpad_down) {
+                position = 150;
+                goSlow = true;
+            }
+            if (gamepad1.dpad_left) {
+                position = 300;
+                goSlow = true;
+            }
+            if (gamepad1.dpad_up) {
+                position = 450;
+                goSlow = true;
+            }
+            if (gamepad1.dpad_right) {
+                position = 600;
+                goSlow = true;
+            }
 
             //Servo Code
                 if (gamepad1.right_bumper) {
                     if (clawOpen) {
                         clawLeft.setPosition(0.0);
                         clawRight.setPosition(0.7);
+                        position = 75;
                         TimeUnit.MILLISECONDS.sleep(500);
                         clawOpen = false;
                     } else {
                         clawLeft.setPosition(0.5);
                         clawRight.setPosition(0.2);
+                        position = 0;
                         TimeUnit.MILLISECONDS.sleep(500);
                         clawOpen = true;
                     }
