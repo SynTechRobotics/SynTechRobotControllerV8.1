@@ -148,17 +148,20 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         waitForStart();
         clawLeft.setPosition(0);
         clawRight.setPosition(0.7);
-        sleep(1000);
+        sleep(600);
         LeftViperSlide.setTargetPosition(500);
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftViperSlide.setVelocity(2500);
-        while (!isStopRequested()) {
+        long start = System.currentTimeMillis();
+        long end = start + 5000;
+        while (!isStopRequested() && System.currentTimeMillis() < end) {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (currentDetections.size() != 0 ) {
                 finalDetectionId = currentDetections.get(0).id;
                 break;
             }
         }
+        //If the camera doesn't detect anything for 5 seconds, the finalDetectionId remains as 0.
         telemetry.addData("foundTag", "_" + String.valueOf(finalDetectionId) + "_");
         telemetry.update();
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
@@ -169,14 +172,14 @@ public class AutonomousMeet3RightSide extends LinearOpMode
             drive.followTrajectorySequence(firstToLowJunctionPos);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.2);
-            sleep(1000);
+            sleep(600);
             LeftViperSlide.setTargetPosition(600);
             LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             LeftViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToConeStackPosition);
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
-            sleep(1000);
+            sleep(600);
             int x = 1;
                 // Back a bit
                 LeftViperSlide.setTargetPosition(1700);
@@ -187,7 +190,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 // Dropping the cone and grabbing another one
                 clawLeft.setPosition(0.5);
                 clawRight.setPosition(0.2);
-                sleep(1000);
+                sleep(600);
                 if (finalDetectionId == 14) {
                     LeftViperSlide.setTargetPosition(450);
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
