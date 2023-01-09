@@ -181,6 +181,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
             clawRight.setPosition(0.7);
             sleep(600);
             int x = 1;
+            while (x <= 2) {
                 // Back a bit
                 LeftViperSlide.setTargetPosition(1700);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -191,6 +192,11 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 clawLeft.setPosition(0.5);
                 clawRight.setPosition(0.2);
                 sleep(600);
+                if (x != 2) {
+                    drive.followTrajectorySequence(secondToConeStackPosition);
+                }
+                x += 1;
+            }
                 if (finalDetectionId == 14) {
                     LeftViperSlide.setTargetPosition(450);
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -205,7 +211,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                     LeftViperSlide.setTargetPosition(450);
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LeftViperSlide.setVelocity(3000);
-                    drive.followTrajectorySequence(secondToConeStackPosition);
+                    drive.followTrajectorySequence(toRightPosition);
                 }
 
         }
