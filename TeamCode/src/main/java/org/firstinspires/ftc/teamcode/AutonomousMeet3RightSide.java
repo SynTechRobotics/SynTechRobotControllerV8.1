@@ -207,7 +207,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LeftViperSlide.setVelocity(3000);
                     drive.followTrajectorySequence(toMiddlePosition);
-                } else if (finalDetectionId == 16){
+                } else if (finalDetectionId == 16 || finalDetectionId == 0){
                     LeftViperSlide.setTargetPosition(450);
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LeftViperSlide.setVelocity(3000);
