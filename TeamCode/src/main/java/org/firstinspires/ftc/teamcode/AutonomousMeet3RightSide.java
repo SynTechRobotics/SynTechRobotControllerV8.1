@@ -180,7 +180,12 @@ public class AutonomousMeet3RightSide extends LinearOpMode
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
             sleep(600);
-            int x = 1;
+            int x = 0;
+            if (finalDetectionId == 0) {
+                x = 2;
+            } else {
+                x = 1;
+            }
             while (x <= 2) {
                 // Back a bit
                 LeftViperSlide.setTargetPosition(1700);
