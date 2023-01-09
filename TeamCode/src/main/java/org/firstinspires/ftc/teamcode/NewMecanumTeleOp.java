@@ -69,19 +69,29 @@ public class NewMecanumTeleOp extends LinearOpMode {
         int savedPosition = 0;
         boolean goFast = false;
         boolean goSlow = false;
-        boolean clawOpen = false;
+        boolean clawOpen = true;
         long prevInterval = starttime;
         int position = 0;
         int prevposition = 0;
         boolean clawfront = true;
+        double y;
+        double x;
+        double rx;
         while (opModeIsActive()) {
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
             // servo2.setDirection(Servo.Direction.REVERSE);
-            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x;
+            if (gamepad1.right_trigger > 0) {
+                y = -gamepad1.left_stick_y; // Remember, this is reversed!
+                x = gamepad1.left_stick_x; // Counteract imperfect strafing
+                rx = gamepad1.right_stick_x;
+            } else {
+                y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
+                x = 0.5*gamepad1.left_stick_x; // Counteract imperfect strafing
+                rx = 0.5*gamepad1.right_stick_x;
+            }
+
             /*
              Denominator is the largest motor power (absolute value) or 1
              This ensures all the powers maintain the same ratio, but only when
@@ -102,13 +112,19 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1650;
+                position = 1620;
+                goSlow = false;
+
             }
             if(gamepad1.y && useButtons) {
-                position = 2950;
+                position = 2920;
+                goSlow = false;
+
             }
             if(gamepad1.b && useButtons) {
-                position = 4050;
+                position = 4020;
+                goSlow = false;
+
             }
             if(gamepad1.a && useButtons) {
                 goSlow = false;
@@ -121,15 +137,8 @@ public class NewMecanumTeleOp extends LinearOpMode {
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 prevposition = position;
-                if (goSlow) {
-                    RightViperSlide.setVelocity(2000);
-                    LeftViperSlide.setVelocity(2000);
-                    goSlow = false;
-                } else {
-                    RightViperSlide.setVelocity(3500);
-                    LeftViperSlide.setVelocity(3500);
-
-                }
+                RightViperSlide.setVelocity(4000);
+                LeftViperSlide.setVelocity(4000);
             }
 
             /* mode switch code (unused)
@@ -169,19 +178,19 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
 
             if (gamepad1.dpad_down) {
-                position = 150;
+                position = 120;
                 goSlow = true;
             }
             if (gamepad1.dpad_left) {
-                position = 300;
+                position = 270;
                 goSlow = true;
             }
             if (gamepad1.dpad_up) {
-                position = 450;
+                position = 420;
                 goSlow = true;
             }
             if (gamepad1.dpad_right) {
-                position = 600;
+                position = 570;
                 goSlow = true;
             }
 
@@ -190,13 +199,17 @@ public class NewMecanumTeleOp extends LinearOpMode {
                     if (clawOpen) {
                         clawLeft.setPosition(0.0);
                         clawRight.setPosition(0.7);
-                        position = 75;
+                        if (position < 150) {
+                            position = 150;
+                        }
                         TimeUnit.MILLISECONDS.sleep(500);
                         clawOpen = false;
                     } else {
                         clawLeft.setPosition(0.5);
                         clawRight.setPosition(0.2);
-                        position = 0;
+                        if (position <= 150) {
+                            position = 0;
+                        }
                         TimeUnit.MILLISECONDS.sleep(500);
                         clawOpen = true;
                     }
