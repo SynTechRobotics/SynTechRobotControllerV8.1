@@ -89,7 +89,7 @@ public class NewMecanumTeleOp extends LinearOpMode {
             } else {
                 y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
                 x = 0.5*gamepad1.left_stick_x; // Counteract imperfect strafing
-                rx = 0.5*gamepad1.right_stick_x;
+                rx = 0.65*gamepad1.right_stick_x;
             }
 
             /*
