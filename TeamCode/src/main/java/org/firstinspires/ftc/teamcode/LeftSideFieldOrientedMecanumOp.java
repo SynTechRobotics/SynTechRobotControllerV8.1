@@ -149,7 +149,7 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 
             }
             if(gamepad1.b && useButtons) {
-                position = 4030;
+                position = 4020;
                 goSlow = false;
 
             }
