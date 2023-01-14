@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp
+@TeleOp(name = "RobotRelativeMecanumTeleOp", group = "FINALCODE")
 public class NewMecanumTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

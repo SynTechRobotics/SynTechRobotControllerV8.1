@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * feel free to change the name or group of your class to better fit your robot
  */
-@TeleOp(name = "DriverRelativeControl", group = "tutorial")
+@TeleOp(name = "DriverRelativeMecanumTeleOp", group = "FINALCODE")
 public class NewerNewMecanumTeleOp extends LinearOpMode {
 
     /**

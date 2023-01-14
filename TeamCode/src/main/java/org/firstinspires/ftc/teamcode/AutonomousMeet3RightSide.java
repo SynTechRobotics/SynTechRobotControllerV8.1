@@ -98,6 +98,9 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         clawRight.setDirection(Servo.Direction.REVERSE);
         DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
         LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
+//        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Pose2d startPose = new Pose2d(-60, -36, 0);
         drive.setPoseEstimate(startPose);
         int correctHeight = 600;
@@ -150,8 +153,11 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         clawRight.setPosition(0.7);
         sleep(750);
         LeftViperSlide.setTargetPosition(500);
+//        RightViperSlide.setTargetPosition(-500);
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftViperSlide.setVelocity(2500);
+//        RightViperSlide.setVelocity(2500);
         long start = System.currentTimeMillis();
         long end = start + 2000;
         while (!isStopRequested() && System.currentTimeMillis() < end) {
@@ -168,21 +174,27 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         if (!isStopRequested()) {
             //to the low junction
             LeftViperSlide.setTargetPosition(1700);
+//            RightViperSlide.setTargetPosition(-1700);
             LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             LeftViperSlide.setVelocity(3000);
+//            RightViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToLowJunctionPos);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.2);
             sleep(750);
             //to the Cone stack after
             LeftViperSlide.setTargetPosition(600);
+//            RightViperSlide.setTargetPosition(-600);
             LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             LeftViperSlide.setVelocity(3000);
+//            RightViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToConeStackPosition);
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
             sleep(750);
-            int x = 0;
+            int x;
             if (finalDetectionId == 0) {
                 x = 2;
             } else {
@@ -202,8 +214,11 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 x += 1;
                 if (x == 2 && finalDetectionId != 0) {
                     LeftViperSlide.setTargetPosition(450);
+//                    RightViperSlide.setTargetPosition(-450);
+//                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LeftViperSlide.setVelocity(2000);
+//                    RightViperSlide.setVelocity(2000);
                     drive.followTrajectorySequence(secondToConeStackPosition);
                     clawLeft.setPosition(0);
                     clawRight.setPosition(0.7);
@@ -211,8 +226,11 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 }
             }
             LeftViperSlide.setTargetPosition(0);
+//            RightViperSlide.setTargetPosition(0);
             LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             LeftViperSlide.setVelocity(3000);
+//            RightViperSlide.setVelocity(3000);
             if (finalDetectionId == 14) {
                 drive.followTrajectorySequence(toLeftPosition);
             } else if (finalDetectionId == 15) {
