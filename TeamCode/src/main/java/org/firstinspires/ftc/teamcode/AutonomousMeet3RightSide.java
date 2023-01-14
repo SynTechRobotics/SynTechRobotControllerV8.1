@@ -107,6 +107,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
+                .strafeRight(2.5)
                 .turn(Math.toRadians(-90))
                 .strafeLeft(40)
                 .forward(2)
