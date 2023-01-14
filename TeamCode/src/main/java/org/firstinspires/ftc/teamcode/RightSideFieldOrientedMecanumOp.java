@@ -140,7 +140,7 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1620;
+                position = 1640;
                 goSlow = false;
 
             }
@@ -150,7 +150,7 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
             }
             if(gamepad1.b && useButtons) {
-                position = 4020;
+                position = 4030;
                 goSlow = false;
 
             }
