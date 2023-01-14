@@ -107,7 +107,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
-                .strafeRight(2.5)
+                .strafeRight(3.5)
                 .turn(Math.toRadians(-90))
                 .strafeLeft(40)
                 .forward(2)
@@ -121,7 +121,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 .build();
 
         TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
-                .back(22.75)
+                .back(23)
                 .strafeRight(14)
                 .forward(2)
                 .build();
@@ -129,7 +129,7 @@ public class AutonomousMeet3RightSide extends LinearOpMode
         TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(2)
                 .strafeLeft(13.5)
-                .forward(22.5)
+                .forward(22.75)
                 .build();
 
         TrajectorySequence toRightPosition = drive.trajectorySequenceBuilder(secondToLowJunctionPos.end())
@@ -205,8 +205,8 @@ public class AutonomousMeet3RightSide extends LinearOpMode
                 // Back a bit
                 LeftViperSlide.setTargetPosition(1700);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LeftViperSlide.setVelocity(2000);
-                sleep(500);
+                LeftViperSlide.setVelocity(4000);
+                sleep(250);
                 drive.followTrajectorySequence(secondToLowJunctionPos);
                 // Dropping the cone and grabbing another one
                 clawLeft.setPosition(0.5);

@@ -107,6 +107,7 @@ public class AutonomousMeet3LeftSide extends LinearOpMode
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
+                .strafeLeft(3.5)
                 .turn(Math.toRadians(90))
                 .strafeRight(41)
                 .forward(4)
@@ -114,20 +115,20 @@ public class AutonomousMeet3LeftSide extends LinearOpMode
 
         TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(4)
-                .strafeRight(25)
+                .strafeRight(25.5)
                 .strafeLeft(12)
                 .forward(24.75)
                 .build();
 
         TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(4)
-                .strafeRight(13.5)
+                .strafeRight(13)
                 .forward(24.5)
                 .build();
 
         TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
                 .back(24.75)
-                .strafeLeft(14)
+                .strafeLeft(13)
                 .forward(4)
                 .build();
 
@@ -144,14 +145,14 @@ public class AutonomousMeet3LeftSide extends LinearOpMode
 
         TrajectorySequence toLeftPosition = drive.trajectorySequenceBuilder(secondToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(13.5)
-                .back(23.5)
+                .strafeRight(13.5)
+                .forward(21)
                 .build();
 
         waitForStart();
         clawLeft.setPosition(0);
         clawRight.setPosition(0.7);
-        sleep(1000);
+        sleep(750);
         LeftViperSlide.setTargetPosition(500);
         LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftViperSlide.setVelocity(2500);
@@ -190,7 +191,7 @@ public class AutonomousMeet3LeftSide extends LinearOpMode
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
             sleep(750);
-            int x = 0;
+            int x;
             if (finalDetectionId == 0) {
                 x = 2;
             } else {
@@ -202,9 +203,9 @@ public class AutonomousMeet3LeftSide extends LinearOpMode
 //                RightViperSlide.setTargetPosition(-1700);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LeftViperSlide.setVelocity(2000);
+                LeftViperSlide.setVelocity(4000);
 //                RightViperSlide.setVelocity(2000);
-                sleep(500);
+                sleep(250);
                 drive.followTrajectorySequence(secondToLowJunctionPos);
                 // Dropping the cone and grabbing another one
                 clawLeft.setPosition(0.5);
