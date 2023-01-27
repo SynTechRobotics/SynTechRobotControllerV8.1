@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 
 
-@TeleOp(name = "RobotRelativeMecanumTeleOp", group = "FINALCODE")
-public class NewMecanumTeleOp extends LinearOpMode {
+@TeleOp(group = "FINALCODE")
+public class RobotRelativeMecanumTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -136,7 +135,7 @@ public class NewMecanumTeleOp extends LinearOpMode {
 
             if (prevposition != position) {
                 RightViperSlide.setTargetPosition(-position);
-                LeftViperSlide.setTargetPosition(position);
+                LeftViperSlide.setTargetPosition(-position);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 prevposition = position;

@@ -161,7 +161,7 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
             if (prevposition != position) {
                 RightViperSlide.setTargetPosition(-position);
-                LeftViperSlide.setTargetPosition(position);
+                LeftViperSlide.setTargetPosition(-position);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 prevposition = position;
