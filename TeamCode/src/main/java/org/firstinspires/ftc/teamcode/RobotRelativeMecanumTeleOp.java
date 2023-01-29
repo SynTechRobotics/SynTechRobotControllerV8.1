@@ -90,7 +90,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                 rx = gamepad1.right_stick_x;
             } else {
                 y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
-                x = 0.5*gamepad1.left_stick_x; // Counteract imperfect strafing
+                x = 0.5*gamepad1.left_stick_x*1.1; // Counteract imperfect strafing
                 rx = 0.65*gamepad1.right_stick_x;
             }
 
@@ -114,17 +114,17 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1655;
+                position = 1200;
                 goSlow = false;
 
             }
             if(gamepad1.y && useButtons) {
-                position = 2920;
+                position =  2100;
                 goSlow = false;
 
             }
             if(gamepad1.b && useButtons) {
-                position = 4020;
+                position = 2950;
                 goSlow = false;
 
             }
@@ -180,19 +180,19 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
 
             if (gamepad1.dpad_down) {
-                position = 120;
+                position = 100;
                 goSlow = true;
             }
             if (gamepad1.dpad_left) {
-                position = 270;
+                position = 200;
                 goSlow = true;
             }
             if (gamepad1.dpad_up) {
-                position = 420;
+                position = 300;
                 goSlow = true;
             }
             if (gamepad1.dpad_right) {
-                position = 570;
+                position = 420;
                 goSlow = true;
             }
 
@@ -201,15 +201,15 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                     if (clawOpen) {
                         clawLeft.setPosition(0.0);
                         clawRight.setPosition(0.7);
-                        if (position < 150) {
-                            position = 150;
+                        if (position < 75) {
+                            position = 75;
                         }
                         TimeUnit.MILLISECONDS.sleep(500);
                         clawOpen = false;
                     } else {
                         clawLeft.setPosition(0.5);
                         clawRight.setPosition(0.2);
-                        if (position <= 150) {
+                        if (position <= 75) {
                             position = 0;
                         }
                         TimeUnit.MILLISECONDS.sleep(500);

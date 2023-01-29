@@ -96,8 +96,8 @@ public class AutonomousQualifierRightSide extends LinearOpMode
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
         clawRight.setDirection(Servo.Direction.REVERSE);
-        DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
-        LeftViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
+        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
 //        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -107,57 +107,57 @@ public class AutonomousQualifierRightSide extends LinearOpMode
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
                 .forward(4)
-                .strafeRight(3.5)
+                .strafeRight(4)
                 .turn(Math.toRadians(-90))
-                .strafeLeft(40)
+                .strafeLeft(36)
                 .forward(2)
                 .build();
 
         TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(25)
+                .strafeLeft(24)
                 .strafeRight(12)
-                .forward(22.75)
+                .forward(15)
                 .build();
 
         TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
-                .back(23)
-                .strafeRight(14)
+                .back(15)
+                .strafeRight(12)
                 .forward(2)
                 .build();
 
         TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(13.5)
-                .forward(22.75)
+                .strafeLeft(12)
+                .forward(15)
                 .build();
 
         TrajectorySequence toRightPosition = drive.trajectorySequenceBuilder(secondToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(13.5)
-                .forward(21)
+                .strafeLeft(12)
+                .forward(12)
                 .build();
 
         TrajectorySequence toMiddlePosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(13.5)
+                .strafeLeft(12)
                 .build();
 
         TrajectorySequence toLeftPosition = drive.trajectorySequenceBuilder(secondToLowJunctionPos.end())
                 .back(2)
-                .strafeLeft(13.5)
-                .back(23.5)
+                .strafeLeft(12)
+                .back(24)
                 .build();
 
         waitForStart();
         clawLeft.setPosition(0);
         clawRight.setPosition(0.7);
         sleep(750);
-        LeftViperSlide.setTargetPosition(500);
+        RightViperSlide.setTargetPosition(-500);
 //        RightViperSlide.setTargetPosition(-500);
-        LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftViperSlide.setVelocity(2500);
+        RightViperSlide.setVelocity(2500);
 //        RightViperSlide.setVelocity(2500);
         long start = System.currentTimeMillis();
         long end = start + 2000;
@@ -174,22 +174,22 @@ public class AutonomousQualifierRightSide extends LinearOpMode
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         if (!isStopRequested()) {
             //to the low junction
-            LeftViperSlide.setTargetPosition(1700);
+            RightViperSlide.setTargetPosition(-1200);
 //            RightViperSlide.setTargetPosition(-1700);
-            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LeftViperSlide.setVelocity(3000);
+            RightViperSlide.setVelocity(3000);
 //            RightViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToLowJunctionPos);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.2);
             sleep(750);
             //to the Cone stack after
-            LeftViperSlide.setTargetPosition(600);
+            RightViperSlide.setTargetPosition(-420);
 //            RightViperSlide.setTargetPosition(-600);
-            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LeftViperSlide.setVelocity(3000);
+            RightViperSlide.setVelocity(3000);
 //            RightViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToConeStackPosition);
             clawLeft.setPosition(0);
@@ -203,9 +203,9 @@ public class AutonomousQualifierRightSide extends LinearOpMode
             }
             while (x <= 2) {
                 // Back a bit
-                LeftViperSlide.setTargetPosition(1700);
-                LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LeftViperSlide.setVelocity(4000);
+                RightViperSlide.setTargetPosition(-1200);
+                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RightViperSlide.setVelocity(4000);
                 sleep(250);
                 drive.followTrajectorySequence(secondToLowJunctionPos);
                 // Dropping the cone and grabbing another one
@@ -214,11 +214,11 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                 sleep(750);
                 x += 1;
                 if (x == 2 && finalDetectionId != 0) {
-                    LeftViperSlide.setTargetPosition(450);
+                    RightViperSlide.setTargetPosition(-300);
 //                    RightViperSlide.setTargetPosition(-450);
 //                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    LeftViperSlide.setVelocity(2000);
+                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    RightViperSlide.setVelocity(2000);
 //                    RightViperSlide.setVelocity(2000);
                     drive.followTrajectorySequence(secondToConeStackPosition);
                     clawLeft.setPosition(0);
@@ -226,11 +226,11 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                     sleep(750);
                 }
             }
-            LeftViperSlide.setTargetPosition(0);
+            RightViperSlide.setTargetPosition(0);
 //            RightViperSlide.setTargetPosition(0);
-            LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LeftViperSlide.setVelocity(3000);
+            RightViperSlide.setVelocity(3000);
 //            RightViperSlide.setVelocity(3000);
             if (finalDetectionId == 14) {
                 drive.followTrajectorySequence(toLeftPosition);

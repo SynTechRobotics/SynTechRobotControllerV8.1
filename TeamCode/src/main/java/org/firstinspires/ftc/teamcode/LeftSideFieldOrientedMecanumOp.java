@@ -139,17 +139,17 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 
 
             if(gamepad1.x && useButtons){
-                position = 1655;
+                position = 1200;
                 goSlow = false;
 
             }
             if(gamepad1.y && useButtons) {
-                position = 2920;
+                position =  2100;
                 goSlow = false;
 
             }
             if(gamepad1.b && useButtons) {
-                position = 4020;
+                position = 2950;
                 goSlow = false;
 
             }
@@ -205,19 +205,19 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 
 
             if (gamepad1.dpad_down) {
-                position = 120;
+                position = 100;
                 goSlow = true;
             }
             if (gamepad1.dpad_left) {
-                position = 270;
+                position = 200;
                 goSlow = true;
             }
             if (gamepad1.dpad_up) {
-                position = 420;
+                position = 300;
                 goSlow = true;
             }
             if (gamepad1.dpad_right) {
-                position = 570;
+                position = 420;
                 goSlow = true;
             }
 
