@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -101,23 +102,30 @@ public class AutonomousQualifierRightSide extends LinearOpMode
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
 //        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Pose2d startPose = new Pose2d(-60, -36, 0);
+        Pose2d startPose = new Pose2d(-60, -38, 0);
         drive.setPoseEstimate(startPose);
         int correctHeight = 600;
 
+
+
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(startPose)
-                .forward(4)
-                .strafeRight(4)
-                .turn(Math.toRadians(-90))
-                .strafeLeft(36)
-                .forward(2)
+                .strafeLeft(2)
+                .lineToLinearHeading(new Pose2d(-18, -32, Math.toRadians(90)))
                 .build();
 
+//                .forward(4)
+//                .strafeRight(4)
+//                .turn(Math.toRadians(-90))
+//                .strafeLeft(36)
+//                .forward(2)
+//                .build();
+
         TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
-                .back(2)
-                .strafeLeft(24)
-                .strafeRight(12)
-                .forward(15)
+                .lineToLinearHeading(new Pose2d(-8, -44, Math.toRadians(-90)))
+//                .back(2)
+//                .strafeLeft(24)
+//                .strafeRight(12)
+//                .forward(15)
                 .build();
 
         TrajectorySequence secondToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
@@ -150,14 +158,11 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                 .build();
 
         waitForStart();
-        clawLeft.setPosition(0);
-        clawRight.setPosition(0.7);
+//        clawLeft.setPosition(0);
+//        clawRight.setPosition(0.7);
         sleep(750);
-        RightViperSlide.setTargetPosition(-500);
 //        RightViperSlide.setTargetPosition(-500);
-        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightViperSlide.setVelocity(2500);
 //        RightViperSlide.setVelocity(2500);
         long start = System.currentTimeMillis();
         long end = start + 2000;
@@ -174,71 +179,65 @@ public class AutonomousQualifierRightSide extends LinearOpMode
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending */
         if (!isStopRequested()) {
             //to the low junction
-            RightViperSlide.setTargetPosition(-1200);
-//            RightViperSlide.setTargetPosition(-1700);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setTargetPosition(-2100);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3000);
 //            RightViperSlide.setVelocity(3000);
             drive.followTrajectorySequence(firstToLowJunctionPos);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.2);
             sleep(750);
             //to the Cone stack after
-            RightViperSlide.setTargetPosition(-420);
-//            RightViperSlide.setTargetPosition(-600);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            RightViperSlide.setTargetPosition(-420);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3000);
 //            RightViperSlide.setVelocity(3000);
-            drive.followTrajectorySequence(firstToConeStackPosition);
-            clawLeft.setPosition(0);
-            clawRight.setPosition(0.7);
-            sleep(750);
-            int x;
-            if (finalDetectionId == 0) {
-                x = 2;
-            } else {
-                x = 1;
-            }
-            while (x <= 2) {
-                // Back a bit
-                RightViperSlide.setTargetPosition(-1200);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(4000);
-                sleep(250);
-                drive.followTrajectorySequence(secondToLowJunctionPos);
-                // Dropping the cone and grabbing another one
-                clawLeft.setPosition(0.5);
-                clawRight.setPosition(0.2);
-                sleep(750);
-                x += 1;
-                if (x == 2 && finalDetectionId != 0) {
-                    RightViperSlide.setTargetPosition(-300);
-//                    RightViperSlide.setTargetPosition(-450);
+//            drive.followTrajectorySequence(firstToConeStackPosition);
+//            clawLeft.setPosition(0);
+//            clawRight.setPosition(0.7);
+//            sleep(750);
+//            int x;
+//            if (finalDetectionId == 0) {
+//                x = 2;
+//            } else {
+//                x = 1;
+//            }
+//            while (x <= 2) {
+//                // Back a bit
+//                RightViperSlide.setTargetPosition(-1200);
+//                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                RightViperSlide.setVelocity(4000);
+//                sleep(250);
+//                drive.followTrajectorySequence(secondToLowJunctionPos);
+//                // Dropping the cone and grabbing another one
+//                clawLeft.setPosition(0.5);
+//                clawRight.setPosition(0.2);
+//                sleep(750);
+//                x += 1;
+//                if (x == 2 && finalDetectionId != 0) {
+//                    RightViperSlide.setTargetPosition(-300);
+////                    RightViperSlide.setTargetPosition(-450);
+////                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    RightViperSlide.setVelocity(2000);
 //                    RightViperSlide.setVelocity(2000);
-                    drive.followTrajectorySequence(secondToConeStackPosition);
-                    clawLeft.setPosition(0);
-                    clawRight.setPosition(0.7);
-                    sleep(750);
-                }
-            }
-            RightViperSlide.setTargetPosition(0);
+////                    RightViperSlide.setVelocity(2000);
+//                    drive.followTrajectorySequence(secondToConeStackPosition);
+//                    clawLeft.setPosition(0);
+//                    clawRight.setPosition(0.7);
+//                    sleep(750);
+//                }
+//            }
 //            RightViperSlide.setTargetPosition(0);
-            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+////            RightViperSlide.setTargetPosition(0);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3000);
+////            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            RightViperSlide.setVelocity(3000);
-            if (finalDetectionId == 14) {
-                drive.followTrajectorySequence(toLeftPosition);
-            } else if (finalDetectionId == 15) {
-                drive.followTrajectorySequence(toMiddlePosition);
-            } else if (finalDetectionId == 16 || finalDetectionId == 0){
-                drive.followTrajectorySequence(toRightPosition);
+////            RightViperSlide.setVelocity(3000);
+//            if (finalDetectionId == 14) {
+//                drive.followTrajectorySequence(toLeftPosition);
+//            } else if (finalDetectionId == 15) {
+//                drive.followTrajectorySequence(toMiddlePosition);
+//            } else if (finalDetectionId == 16 || finalDetectionId == 0){
+//                drive.followTrajectorySequence(toRightPosition);
+//            }
             }
-        }
     }
 }
