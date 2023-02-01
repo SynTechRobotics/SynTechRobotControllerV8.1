@@ -59,9 +59,6 @@ public class AutonomousQualifierRightSide extends LinearOpMode
     double tagsize = 0.166;
 
     // Tag ID 1,2,3 from the 36h11 family
-    int LEFT = 14;
-    int MIDDLE = 15;
-    int RIGHT = 16;
     AprilTagDetection tagOfInterest = null;
 
     @Override
@@ -102,55 +99,54 @@ public class AutonomousQualifierRightSide extends LinearOpMode
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
 //        RightViperSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Pose2d startPose = new Pose2d(-64.5, -38, 0);
+        Pose2d startPose = new Pose2d(-65, -38, 0);
         drive.setPoseEstimate(startPose);
         int correctHeight = 600;
 
 
 
         TrajectorySequence toMediumJunctionPos = drive.trajectorySequenceBuilder(startPose)
-                .strafeLeft(2)
+                .lineToLinearHeading(new Pose2d(-53, -36, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(-12, -37))
                 .lineToLinearHeading(new Pose2d(-23, -32, Math.toRadians(90)))
                 .build();
 
         TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(toMediumJunctionPos.end())
-                .lineToLinearHeading(new Pose2d(-13, -44, Math.toRadians(-90)))
-                .strafeTo(new Vector2d(-14, -60))
+                .lineToLinearHeading(new Pose2d(-13, -42, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-14, -58, Math.toRadians(-90)))
                 .build();
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
                 .back(4)
-                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY()+6, firstToConeStackPosition.end().getHeading() + Math.toRadians(-120)))
+                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY()+9, firstToConeStackPosition.end().getHeading() + Math.toRadians(-110)))
                 .forward(4)
                 .build();
 
         TrajectorySequence secondToConeStackPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(4)
-                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY()+3.5, firstToConeStackPosition.end().getHeading()))
+                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY()+4.5, firstToConeStackPosition.end().getHeading()))
                 .forward(4)
                 .build();
 
         TrajectorySequence toRightPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
-                .back(2)
-                .strafeLeft(12)
-                .forward(12)
+                .back(4)
+                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY() + 4.5, Math.toRadians(-90)))
                 .build();
 
-        TrajectorySequence toMiddlePosition = drive.trajectorySequenceBuilder(toMediumJunctionPos.end())
-                .back(2)
-                .strafeLeft(12)
+        TrajectorySequence toMiddlePosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
+                .back(4)
+                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY() + 24, Math.toRadians(-90)))
                 .build();
 
         TrajectorySequence toLeftPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
-                .back(2)
-                .strafeLeft(12)
-                .back(24)
+                .back(4)
+                .lineToLinearHeading(new Pose2d(firstToConeStackPosition.end().getX(), firstToConeStackPosition.end().getY() + 48, Math.toRadians(-90)))
                 .build();
 
         waitForStart();
         clawLeft.setPosition(0);
         clawRight.setPosition(0.7);
-        sleep(750);
+        sleep(700);
         RightViperSlide.setTargetPosition(-500);
         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightViperSlide.setVelocity(2500);
@@ -171,49 +167,66 @@ public class AutonomousQualifierRightSide extends LinearOpMode
             //to the low junction
             RightViperSlide.setTargetPosition(-2100);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3000);
+            RightViperSlide.setVelocity(4000);
             drive.followTrajectorySequence(toMediumJunctionPos);
             clawLeft.setPosition(0.5);
             clawRight.setPosition(0.2);
-            sleep(750);
+            sleep(700);
             //to the Cone stack after
             RightViperSlide.setTargetPosition(-420);
             RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            RightViperSlide.setVelocity(3000);
+            RightViperSlide.setVelocity(4000);
             drive.followTrajectorySequence(firstToConeStackPosition);
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
-            sleep(750);
+            sleep(700);
             int x;
             if (finalDetectionId == 0) {
                 x = 2;
             } else {
                 x = 1;
             }
-            while (x <= 4 && !isStopRequested()) {
+            int loopnum = 1;
+            while (x <= 3 && !isStopRequested()) {
                 RightViperSlide.setTargetPosition(-1200);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3000);
-                sleep(750);
+                RightViperSlide.setVelocity(4000);
+                sleep(500);
                 drive.followTrajectorySequence(firstToLowJunctionPos);
                 clawLeft.setPosition(0.5);
                 clawRight.setPosition(0.2);
                 sleep(100);
-                RightViperSlide.setTargetPosition(-(300-100*(x-1)));
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(3000);
-                sleep(100);
-                drive.followTrajectorySequence(secondToConeStackPosition);
-                clawLeft.setPosition(0);
-                clawRight.setPosition(0.7);
-                sleep(750);
+                if (x != 3) {
+                    RightViperSlide.setTargetPosition(-(300 - 100 * (loopnum - 1)));
+                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    RightViperSlide.setVelocity(4000);
+                    sleep(100);
+                    drive.followTrajectorySequence(secondToConeStackPosition);
+                    clawLeft.setPosition(0);
+                    clawRight.setPosition(0.7);
+                    sleep(700);
+                } else {
+                    sleep(600);
+                    RightViperSlide.setTargetPosition(0);
+                    RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    RightViperSlide.setVelocity(4000);
+                }
+                x += 1;
+                loopnum += 1;
+            }
+            if (finalDetectionId == 14) {
+                drive.followTrajectorySequence(toLeftPosition);
+            } else if (finalDetectionId == 15) {
+                drive.followTrajectorySequence(toMiddlePosition);
+            } else {
+                drive.followTrajectorySequence(toRightPosition);
             }
 //            RightViperSlide.setTargetPosition(0);
 //            RightViperSlide.setTargetPosition(0);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            RightViperSlide.setVelocity(3000);
-//            RightViperSlide.setVelocity(3000);
+//            RightViperSlide.setVelocity(4000);
+//            RightViperSlide.setVelocity(4000);
 //            if (finalDetectionId == 14) {
 //                drive.followTrajectorySequence(toLeftPosition);
 //            } else if (finalDetectionId == 15) {
