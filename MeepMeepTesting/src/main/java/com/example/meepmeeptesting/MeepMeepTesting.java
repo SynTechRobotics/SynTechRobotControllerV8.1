@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -13,12 +14,28 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(50, 50, 4.1244445800781255, Math.toRadians(180), 13.03)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-70, -38, 0))
-//                                drive.trajectorySequenceBuilder(new Pose2d(36, -68, Math.toRadians(90)))
-//                                .strafeLeft(4)
-                                .lineToLinearHeading(new Pose2d(-18, -32, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(-8, -44, Math.toRadians(-90)))
+                        drive.trajectorySequenceBuilder(new Pose2d(-65, 38, 0))
+                                .lineToLinearHeading(new Pose2d(-53, 36, Math.toRadians(-90)))
+                                .lineToConstantHeading(new Vector2d(-12, 37))
+                                .lineToLinearHeading(new Pose2d(-25, 33.75, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(-13, 42, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(-13, 60, Math.toRadians(90)))
+                                .back(4)
+                                .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(200)))
+                                .forward(3.6)
+                                .back(4)
+                                .lineToLinearHeading(new Pose2d(-13, 55.5, Math.toRadians(90)))
+                                .forward(4)
                                 .build()
+
+//                        drive.trajectorySequenceBuilder(new Pose2d(-65, -38, 0))
+//                                .lineToLinearHeading(new Pose2d(-53, -36, Math.toRadians(90)))
+//                                .lineToConstantHeading(new Vector2d(-12, -37))
+//                                .lineToLinearHeading(new Pose2d(-23, -32, Math.toRadians(90)))
+//                                .lineToLinearHeading(new Pose2d(-13, -42, Math.toRadians(-90)))
+//                                .lineToLinearHeading(new Pose2d(-14, -58, Math.toRadians(-90)))
+
+//                                .strafeLeft(4)
 //                                .forward(4)
 //                                .strafeRight(3.5)
 //                                .turn(Math.toRadians(-90))
