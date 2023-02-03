@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -51,7 +52,7 @@ public class EasyOpenCVColorDetection extends OpMode {
         double leftavgfin;
         double rightavgfin;
         Mat outPut = new Mat();
-        Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
+        Scalar rectColor = new Scalar(255.0, 255.0, 0.0);
 
         public Mat processFrame(Mat input) {
 
@@ -62,7 +63,14 @@ public class EasyOpenCVColorDetection extends OpMode {
             Rect rightRect = new Rect(320, 1, 319, 359);
 
             input.copyTo(outPut);
+            Imgproc.rectangle(outPut, leftRect, rectColor, 2);
+            Imgproc.rectangle(outPut, rightRect, rectColor, 2);
 
+            Core.extractChannel(leftCrop, leftCrop, 1);
+            Core.extractChannel(rightCrop, rightCrop, 1);
+
+            Scalar leftavg = Core.mean(leftCrop);
+            Scalar rightavg = Core.mean(rightCrop);
 
             return(outPut);
         }
