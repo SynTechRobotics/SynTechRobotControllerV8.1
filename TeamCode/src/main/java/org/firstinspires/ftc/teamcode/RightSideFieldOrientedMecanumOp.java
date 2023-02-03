@@ -70,8 +70,6 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 //        clawLeft.setPosition(0.1);
 //        clawRight.setPosition(0.9);
 
-        double lPosition = 0.1;
-        double rPosition = 0.9;
 
         /*
          Reverse the right side motors
@@ -83,20 +81,13 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-        long starttime = System.currentTimeMillis();
 
 
 
-        boolean useIncrements = false;
         boolean useButtons = true;
-        int savedPosition = 0;
-        boolean goFast = false;
-        boolean goSlow = false;
         boolean clawOpen = true;
-        long prevInterval = starttime;
         int position = 0;
         int prevposition = 0;
-        boolean clawfront = true;
         double x;
         double y;
         double rx;
@@ -141,21 +132,17 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
             if(gamepad1.x && useButtons){
                 position = 1200;
-                goSlow = false;
 
             }
             if(gamepad1.y && useButtons) {
                 position =  2100;
-                goSlow = false;
 
             }
             if(gamepad1.b && useButtons) {
                 position = 2950;
-                goSlow = false;
 
             }
             if(gamepad1.a && useButtons) {
-                goSlow = false;
                 position = 0;
             }
 
@@ -207,19 +194,15 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
             if (gamepad1.dpad_down) {
                 position = 100;
-                goSlow = true;
             }
             if (gamepad1.dpad_left) {
                 position = 200;
-                goSlow = true;
             }
             if (gamepad1.dpad_up) {
                 position = 300;
-                goSlow = true;
             }
             if (gamepad1.dpad_right) {
                 position = 420;
-                goSlow = true;
             }
 
             //Servo Code

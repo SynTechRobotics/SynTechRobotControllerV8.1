@@ -19,10 +19,6 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
@@ -63,15 +59,9 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 
         Servo clawLeft = hardwareMap.servo.get("clwleft");
         Servo clawRight = hardwareMap.servo.get("clwright");
-//        Servo clawLeft = hardwareMap.servo.get("clawLeft");
-//        Servo clawRight = hardwareMap.servo.get("clawRight");
+
         clawRight.setDirection(Servo.Direction.REVERSE);
 
-//        clawLeft.setPosition(0.1);
-//        clawRight.setPosition(0.9);
-
-        double lPosition = 0.1;
-        double rPosition = 0.9;
 
         /*
          Reverse the right side motors
@@ -83,20 +73,12 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-        long starttime = System.currentTimeMillis();
 
 
 
-        boolean useIncrements = false;
-        boolean useButtons = true;
-        int savedPosition = 0;
-        boolean goFast = false;
-        boolean goSlow = false;
         boolean clawOpen = true;
-        long prevInterval = starttime;
         int position = 0;
-        int prevposition = 0;
-        boolean clawfront = true;
+        int prevPosition = 0;
         double x;
         double y;
         double rx;
@@ -138,87 +120,43 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 //Viper Slide Code:
 
 
-            if(gamepad1.x && useButtons){
+            if(gamepad1.x){
                 position = 1200;
-                goSlow = false;
 
             }
-            if(gamepad1.y && useButtons) {
+            if(gamepad1.y) {
                 position =  2100;
-                goSlow = false;
 
             }
-            if(gamepad1.b && useButtons) {
+            if(gamepad1.b) {
                 position = 2950;
-                goSlow = false;
 
             }
-            if(gamepad1.a && useButtons) {
-                goSlow = false;
+            if(gamepad1.a) {
                 position = 0;
             }
 
-            if (prevposition != position) {
+            if (prevPosition != position) {
                 RightViperSlide.setTargetPosition(-position);
                 LeftViperSlide.setTargetPosition(-position);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                prevposition = position;
+                prevPosition = position;
                 RightViperSlide.setVelocity(4000);
                 LeftViperSlide.setVelocity(4000);
             }
 
-            /* mode switch code (unused)
-            if (gamepad1.dpad_left) {
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2750);
-                position = 0;
-                useButtons = false;
-                useIncrements = true;
-            }
-            if (gamepad1.dpad_right) {
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2750);
-                position = 0;
-                useButtons = true;
-                useIncrements = false;
-            }
-            */
-//            if (gamepad1.dpad_up) {
-//                position += 150;
-//                if (position > 3000) {
-//                    position = 3000;
-//                }
-//                sleep(80);
-//            }
-//            if (gamepad1.dpad_down && position > 0) {
-//                position -= 150;
-//                if (position < 0) {
-//                    position = 0;
-//                }
-//                sleep(80);
-//            }
-//            goSlow = true;
-
-
-
             if (gamepad1.dpad_down) {
                 position = 100;
-                goSlow = true;
             }
             if (gamepad1.dpad_left) {
                 position = 200;
-                goSlow = true;
             }
             if (gamepad1.dpad_up) {
                 position = 300;
-                goSlow = true;
             }
             if (gamepad1.dpad_right) {
                 position = 420;
-                goSlow = true;
             }
 
             //Servo Code

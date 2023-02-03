@@ -127,7 +127,13 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
                 .forward(4)
                 .build();
 
-        TrajectorySequence secondToConeStackPosition2 = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
+        TrajectorySequence firstToLowJunctionPos2 = drive.trajectorySequenceBuilder(secondToConeStackPosition1.end())
+                .back(4)
+                .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(195)))
+                .forward(3.5)
+                .build();
+
+        TrajectorySequence secondToConeStackPosition2 = drive.trajectorySequenceBuilder(firstToLowJunctionPos2.end())
                 .back(3.75)
                 .addDisplacementMarker(() -> {
                     RightViperSlide.setTargetPosition(-200);
@@ -137,6 +143,12 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
                 })
                 .lineToLinearHeading(new Pose2d(-13, 56, Math.toRadians(90)))
                 .forward(4)
+                .build();
+
+        TrajectorySequence firstToLowJunctionPos3 = drive.trajectorySequenceBuilder(secondToConeStackPosition2.end())
+                .back(4)
+                .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(195)))
+                .forward(3.5)
                 .build();
 
         TrajectorySequence secondToConeStackPosition3 = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
@@ -203,18 +215,19 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
             clawLeft.setPosition(0);
             clawRight.setPosition(0.7);
             sleep(700);
-            int x;
-            if (finalDetectionId == 0) {
-                x = 2;
-            } else {
-                x = 1;
-            }
+            int x = 1;
             while (x <= 3 && !isStopRequested()) {
                 RightViperSlide.setTargetPosition(-1200);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 RightViperSlide.setVelocity(4000);
                 sleep(500);
-                drive.followTrajectorySequence(firstToLowJunctionPos);
+                if (x == 1) {
+                    drive.followTrajectorySequence(firstToLowJunctionPos);
+                } else if (x == 2) {
+                    drive.followTrajectorySequence(firstToLowJunctionPos2);
+                } else if (x == 3) {
+                    drive.followTrajectorySequence(firstToLowJunctionPos3);
+                }
                 clawLeft.setPosition(0.5);
                 clawRight.setPosition(0.2);
                 sleep(100);
