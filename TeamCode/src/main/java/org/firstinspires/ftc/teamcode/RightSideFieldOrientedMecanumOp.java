@@ -135,11 +135,11 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
 
             }
             if(gamepad1.y && useButtons) {
-                position =  2100;
+                position =  2023;
 
             }
             if(gamepad1.b && useButtons) {
-                position = 2950;
+                position = 2850;
 
             }
             if(gamepad1.a && useButtons) {

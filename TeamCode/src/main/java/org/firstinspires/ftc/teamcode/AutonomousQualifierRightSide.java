@@ -118,7 +118,7 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     RightViperSlide.setVelocity(4000);
                 })
-                .lineToLinearHeading(new Pose2d(-15, -55.5, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-15, -56.5, Math.toRadians(-90)))
                 .forward(4)
                 .build();
 
@@ -135,7 +135,7 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     RightViperSlide.setVelocity(4000);
                 })
-                .lineToLinearHeading(new Pose2d(-15, -55.5, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-15, -56.5, Math.toRadians(-90)))
                 .forward(3.5)
                 .build();
 

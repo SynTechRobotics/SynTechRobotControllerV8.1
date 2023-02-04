@@ -112,24 +112,24 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
                 .back(4)
                 .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(195)))
-                .forward(3.5)
+                .forward(3)
                 .build();
 
         TrajectorySequence secondToConeStackPosition1 = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
-                .back(3.5)
+                .back(3)
                 .addDisplacementMarker(() -> {
                     RightViperSlide.setTargetPosition(-300);
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     RightViperSlide.setVelocity(5000);
                     sleep(100);
                 })
-                .lineToLinearHeading(new Pose2d(-13, 56, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-13, 55.5, Math.toRadians(90)))
                 .forward(4)
                 .build();
 
         TrajectorySequence firstToLowJunctionPos2 = drive.trajectorySequenceBuilder(secondToConeStackPosition1.end())
                 .back(4)
-                .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(195)))
+                .lineToLinearHeading(new Pose2d(-13, 50.5, Math.toRadians(195)))
                 .forward(3.5)
                 .build();
 
@@ -147,12 +147,12 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
 
         TrajectorySequence firstToLowJunctionPos3 = drive.trajectorySequenceBuilder(secondToConeStackPosition2.end())
                 .back(4)
-                .lineToLinearHeading(new Pose2d(-13, 50, Math.toRadians(195)))
-                .forward(3.5)
+                .lineToLinearHeading(new Pose2d(-13, 51, Math.toRadians(195)))
+                .forward(3)
                 .build();
 
         TrajectorySequence secondToConeStackPosition3 = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
-                .back(4)
+                .back(3)
                 .addDisplacementMarker(() -> {
                     RightViperSlide.setTargetPosition(-100);
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);

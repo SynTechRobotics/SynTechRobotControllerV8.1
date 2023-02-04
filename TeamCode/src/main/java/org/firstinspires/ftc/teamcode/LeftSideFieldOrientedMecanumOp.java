@@ -125,11 +125,11 @@ public class LeftSideFieldOrientedMecanumOp extends LinearOpMode {
 
             }
             if(gamepad1.y) {
-                position =  2100;
+                position =  2023;
 
             }
             if(gamepad1.b) {
-                position = 2950;
+                position = 2850;
 
             }
             if(gamepad1.a) {
