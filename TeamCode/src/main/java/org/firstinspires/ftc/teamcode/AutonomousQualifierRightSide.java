@@ -102,7 +102,7 @@ public class AutonomousQualifierRightSide extends LinearOpMode
 
         TrajectorySequence firstToConeStackPosition = drive.trajectorySequenceBuilder(toMediumJunctionPos.end())
                 .lineToLinearHeading(new Pose2d(-13, -42, Math.toRadians(-90)))
-                .lineToLinearHeading(new Pose2d(-14, -60.5, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-14, -59, Math.toRadians(-90)))
                 .build();
 
         TrajectorySequence firstToLowJunctionPos = drive.trajectorySequenceBuilder(firstToConeStackPosition.end())
@@ -118,13 +118,13 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     RightViperSlide.setVelocity(4000);
                 })
-                .lineToLinearHeading(new Pose2d(-15, -56.5, Math.toRadians(-90)))
-                .forward(4)
+                .lineToLinearHeading(new Pose2d(-15, -56, Math.toRadians(-90)))
+                .forward(2.25)
                 .build();
 
         TrajectorySequence firstToLowJunctionPos2 = drive.trajectorySequenceBuilder(secondToConeStackPosition1.end())
                 .back(5)
-                .lineToLinearHeading(new Pose2d(-14, -51, Math.toRadians(-200)))
+                .lineToLinearHeading(new Pose2d(-14, -49, Math.toRadians(-200)))
                 .forward(4)
                 .build();
 
@@ -135,13 +135,13 @@ public class AutonomousQualifierRightSide extends LinearOpMode
                     RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     RightViperSlide.setVelocity(4000);
                 })
-                .lineToLinearHeading(new Pose2d(-15, -56.5, Math.toRadians(-90)))
-                .forward(3.5)
+                .lineToLinearHeading(new Pose2d(-15, -56, Math.toRadians(-90)))
+                .forward(2.75)
                 .build();
 
         TrajectorySequence firstToLowJunctionPos3 = drive.trajectorySequenceBuilder(secondToConeStackPosition2.end())
                 .back(7)
-                .lineToLinearHeading(new Pose2d(-14, -50, Math.toRadians(-200)))
+                .lineToLinearHeading(new Pose2d(-14, -48.5, Math.toRadians(-200)))
                 .forward(4)
                 .build();
 
@@ -152,7 +152,7 @@ public class AutonomousQualifierRightSide extends LinearOpMode
 
         TrajectorySequence toMiddlePosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
                 .back(4)
-                .lineToLinearHeading(new Pose2d(-14, -36, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-14, -33, Math.toRadians(-90)))
                 .build();
 
         TrajectorySequence toLeftPosition = drive.trajectorySequenceBuilder(firstToLowJunctionPos.end())
