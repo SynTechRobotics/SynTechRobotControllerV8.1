@@ -1,10 +1,34 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +36,74 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(group = "FINALCODE")
 public class RobotRelativeMecanumTeleOp extends LinearOpMode {
+
+    OpenCvWebcam webcam1 = null;
+    String outputReal;
+    class examplePipeline extends OpenCvPipeline {
+        Mat YCbCr = new Mat();
+        Mat Crop1;
+        Mat Crop2;
+        Mat Crop3;
+
+        Mat outPut = new Mat();
+        Scalar rect1Color = new Scalar(255.0, 255.0, 0.0);
+        Scalar rect2Color = new Scalar(255.0, 255.0, 0.0);
+        Scalar rect3Color = new Scalar(255.0, 255.0, 0.0);
+
+
+        public Mat processFrame(Mat input) {
+
+            Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
+            telemetry.addLine("pipeline running");
+
+            Rect crop1 = new Rect(1, 1, 239, 1279);
+            Rect crop2 = new Rect(240, 1, 239, 1279);
+            Rect crop3 = new Rect(480, 1, 239, 1279);
+
+            Imgproc.rectangle(outPut, crop1, rect1Color, 2);
+            Imgproc.rectangle(outPut, crop2, rect2Color, 2);
+            Imgproc.rectangle(outPut, crop3, rect3Color, 2);
+
+            Crop1 = YCbCr.submat(crop1);
+            Crop2 = YCbCr.submat(crop2);
+            Crop3 = YCbCr.submat(crop3);
+
+            Core.extractChannel(Crop1, Crop1, 1);
+            Core.extractChannel(Crop2, Crop2, 1);
+            Core.extractChannel(Crop3, Crop3, 1);
+
+            Scalar leftavg = Core.mean(Crop1);
+            Scalar midavg = Core.mean(Crop2);
+            Scalar rightavg = Core.mean(Crop3);
+
+
+
+            if (leftavg.val[0] > midavg.val[0] && leftavg.val[0] > rightavg.val[0]) {
+                telemetry.addLine("Left");
+                outputReal = "Left";
+                rect1Color = new Scalar(0.0, 0.0, 255.0);
+                rect2Color = new Scalar(255.0, 255.0, 0.0);
+                rect3Color = new Scalar(255.0, 255.0, 0.0);
+            } else if (midavg.val[0] > leftavg.val[0] && midavg.val[0] > rightavg.val[0]){
+                telemetry.addLine("Middle");
+                outputReal = "Middle";
+                rect1Color = new Scalar(255.0, 255.0, 0.0);
+                rect2Color = new Scalar(0.0, 0.0, 255.0);
+                rect3Color = new Scalar(255.0, 255.0, 0.0);
+            } else if (rightavg.val[0] > midavg.val[0] && rightavg.val[0] > leftavg.val[0]) {
+                telemetry.addLine("Right");
+                outputReal = "Right";
+                rect1Color = new Scalar(255.0, 255.0, 0.0);
+                rect2Color = new Scalar(255.0, 255.0, 0.0);
+                rect3Color = new Scalar(0.0, 0.0, 255.0);
+            }
+            Imgproc.rectangle(outPut, crop1, rect1Color, 2);
+            Imgproc.rectangle(outPut, crop2, rect2Color, 2);
+            Imgproc.rectangle(outPut, crop3, rect3Color, 2);
+
+            return(outPut);
+        }
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -20,6 +112,24 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 //        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
 //        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
 //        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam1 = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+
+        webcam1.setPipeline(new examplePipeline());
+
+        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam1.startStreaming(1280, 720, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
@@ -45,6 +155,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 //        Servo clawLeft = hardwareMap.servo.get("clawLeft");
 //        Servo clawRight = hardwareMap.servo.get("clawRight");
         clawRight.setDirection(Servo.Direction.REVERSE);
+
 
 //        clawLeft.setPosition(0.1);
 //        clawRight.setPosition(0.9);
@@ -80,6 +191,15 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         double x;
         double rx;
         while (opModeIsActive()) {
+            TrajectorySequence moveLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                    .strafeLeft(2)
+                    .build();
+            TrajectorySequence moveRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                    .strafeLeft(2)
+                    .build();
+            TrajectorySequence moveBack = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                    .back(2)
+                    .build();
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
@@ -216,10 +336,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                         clawOpen = true;
                     }
                 }
-
-                telemetry.addData("viperPos", position);
-                telemetry.update();
-            }
+                }
 
 
         }
