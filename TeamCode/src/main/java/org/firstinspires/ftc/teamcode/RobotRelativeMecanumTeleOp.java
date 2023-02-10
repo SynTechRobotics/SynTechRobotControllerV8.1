@@ -47,9 +47,9 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
             Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
             telemetry.addLine("pipeline running");
 
-            Rect crop1 = new Rect(1, 1, 239, 1279);
-            Rect crop2 = new Rect(240, 1, 239, 1279);
-            Rect crop3 = new Rect(480, 1, 239, 1279);
+            Rect crop1 = new Rect(1, 1, 161, 799);
+            Rect crop2 = new Rect(162, 1, 161, 799);
+            Rect crop3 = new Rect(324, 1, 161, 799);
 
             Imgproc.rectangle(outPut, crop1, rect1Color, 2);
             Imgproc.rectangle(outPut, crop2, rect2Color, 2);
@@ -132,7 +132,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam1.startStreaming(1280, 720, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                webcam1.startStreaming(800, 448, OpenCvCameraRotation.SIDEWAYS_RIGHT);
             }
 
             @Override
