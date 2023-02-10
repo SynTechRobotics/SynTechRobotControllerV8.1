@@ -15,12 +15,11 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-//THIS IS UNTESTED AND UNFINISHED
 @Autonomous
 public class EasyOpenCVColorDetection extends OpMode {
 
     OpenCvWebcam webcam1 = null;
-
+    String outputReal;
     @Override
     public void init() {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -68,7 +67,6 @@ public class EasyOpenCVColorDetection extends OpMode {
             Rect crop2 = new Rect(240, 1, 239, 1279);
             Rect crop3 = new Rect(480, 1, 239, 1279);
 
-            input.copyTo(outPut);
             Imgproc.rectangle(outPut, crop1, rect1Color, 2);
             Imgproc.rectangle(outPut, crop2, rect2Color, 2);
             Imgproc.rectangle(outPut, crop3, rect3Color, 2);
@@ -89,16 +87,19 @@ public class EasyOpenCVColorDetection extends OpMode {
 
             if (leftavg.val[0] > midavg.val[0] && leftavg.val[0] > rightavg.val[0]) {
                 telemetry.addLine("Left");
+                outputReal = "Left";
                 rect1Color = new Scalar(0.0, 0.0, 255.0);
                 rect2Color = new Scalar(255.0, 255.0, 0.0);
                 rect3Color = new Scalar(255.0, 255.0, 0.0);
             } else if (midavg.val[0] > leftavg.val[0] && midavg.val[0] > rightavg.val[0]){
                 telemetry.addLine("Middle");
+                outputReal = "Middle";
                 rect1Color = new Scalar(255.0, 255.0, 0.0);
                 rect2Color = new Scalar(0.0, 0.0, 255.0);
                 rect3Color = new Scalar(255.0, 255.0, 0.0);
             } else if (rightavg.val[0] > midavg.val[0] && rightavg.val[0] > leftavg.val[0]) {
                 telemetry.addLine("Right");
+                outputReal = "Right";
                 rect1Color = new Scalar(255.0, 255.0, 0.0);
                 rect2Color = new Scalar(255.0, 255.0, 0.0);
                 rect3Color = new Scalar(0.0, 0.0, 255.0);
