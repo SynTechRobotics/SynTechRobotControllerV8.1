@@ -214,6 +214,9 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
                             position = 150;
                         }
                         TimeUnit.MILLISECONDS.sleep(500);
+                        RightViperSlide.setTargetPosition(0);
+                        RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        RightViperSlide.setVelocity(4000);
                         clawOpen = false;
                     } else {
                         clawLeft.setPosition(0.5);
