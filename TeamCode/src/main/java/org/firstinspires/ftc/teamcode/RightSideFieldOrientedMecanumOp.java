@@ -223,7 +223,6 @@ public class RightSideFieldOrientedMecanumOp extends LinearOpMode {
                         }
                         TimeUnit.MILLISECONDS.sleep(500);
 
-                        drive.followTrajectorySequence(toMediumJunctionPos);
                         RightViperSlide.setTargetPosition(0);
                         RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         RightViperSlide.setVelocity(4000);

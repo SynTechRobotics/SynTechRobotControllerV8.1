@@ -104,8 +104,28 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
             return(outPut);
         }
     }
+    TrajectorySequence moveLeft;
+    TrajectorySequence moveRight;
+    TrajectorySequence moveBack;
+    SampleMecanumDrive drive;
+    Servo clawRight;
+    Servo clawLeft;
+    public void autoAllign() {
+        if (outputReal != "Middle") {
+            if (outputReal == "Left") {
+                drive.followTrajectorySequence(moveRight);
+            }
+            if (outputReal == "Right") {
+                drive.followTrajectorySequence(moveLeft);
+            }
+        }
+    }
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+
+
         // Declare our motors
         // Make sure your ID's match your configuration
 //        DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
@@ -129,7 +149,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
             }
         });
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
@@ -150,8 +170,8 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        Servo clawLeft = hardwareMap.servo.get("clwleft");
-        Servo clawRight = hardwareMap.servo.get("clwright");
+        clawLeft = hardwareMap.servo.get("clwleft");
+        clawRight = hardwareMap.servo.get("clwright");
 //        Servo clawLeft = hardwareMap.servo.get("clawLeft");
 //        Servo clawRight = hardwareMap.servo.get("clawRight");
         clawRight.setDirection(Servo.Direction.REVERSE);
@@ -190,14 +210,15 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         double y;
         double x;
         double rx;
+
         while (opModeIsActive()) {
-            TrajectorySequence moveLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                    .strafeLeft(2)
+            moveLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                    .strafeLeft(1)
                     .build();
-            TrajectorySequence moveRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                    .strafeLeft(2)
+            moveRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                    .strafeLeft(1)
                     .build();
-            TrajectorySequence moveBack = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+            moveBack = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
                     .back(2)
                     .build();
             // Denominator is the largest motor power (absolute value) or 1
@@ -263,41 +284,6 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                 LeftViperSlide.setVelocity(4000);
             }
 
-            /* mode switch code (unused)
-            if (gamepad1.dpad_left) {
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2750);
-                position = 0;
-                useButtons = false;
-                useIncrements = true;
-            }
-            if (gamepad1.dpad_right) {
-                RightViperSlide.setTargetPosition(0);
-                RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                RightViperSlide.setVelocity(2750);
-                position = 0;
-                useButtons = true;
-                useIncrements = false;
-            }
-            */
-//            if (gamepad1.dpad_up) {
-//                position += 150;
-//                if (position > 3000) {
-//                    position = 3000;
-//                }
-//                sleep(80);
-//            }
-//            if (gamepad1.dpad_down && position > 0) {
-//                position -= 150;
-//                if (position < 0) {
-//                    position = 0;
-//                }
-//                sleep(80);
-//            }
-//            goSlow = true;
-
-
 
             if (gamepad1.dpad_down) {
                 position = 100;
@@ -337,6 +323,28 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                     }
                 }
                 }
+        if (gamepad1.left_bumper) {
+            if (clawOpen) {
+                clawLeft.setPosition(1.1);
+                clawRight.setPosition(0.8);
+                if (position < 75) {
+                    position = 75;
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
+                clawOpen = false;
+            } else {
+                clawLeft.setPosition(0.5);
+                clawRight.setPosition(0.2);
+                if (position <= 75) {
+                    position = 0;
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
+                clawOpen = true;
+            }
+        }
+        if (gamepad1.back) {
+            autoAllign();
+        }
 
 
         }
