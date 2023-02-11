@@ -220,7 +220,11 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                 y = -gamepad1.left_stick_y; // Remember, this is reversed!
                 x = gamepad1.left_stick_x; // Counteract imperfect strafing
                 rx = gamepad1.right_stick_x;
-            } else {
+            } else if (gamepad1.left_trigger > 0) {
+                y = 0.25 * -gamepad1.left_stick_y; // Remember, this is reversed!
+                x = 0.25 * gamepad1.left_stick_x; // Counteract imperfect strafing
+                rx = 0.35 * gamepad1.right_stick_x;
+            }  else {
                 y = -0.5*gamepad1.left_stick_y; // Remember, this is reversed!
                 x = 0.5*gamepad1.left_stick_x*1.1; // Counteract imperfect strafing
                 rx = 0.65*gamepad1.right_stick_x;
