@@ -143,7 +143,7 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
                     sleep(100);
                 })
                 .lineToLinearHeading(new Pose2d(-13, 57, Math.toRadians(90)))
-                .forward(1.5)
+                .forward(2.5)
                 .build();
 
         TrajectorySequence firstToLowJunctionPos3 = drive.trajectorySequenceBuilder(thirdToConeStackPosition.end())
