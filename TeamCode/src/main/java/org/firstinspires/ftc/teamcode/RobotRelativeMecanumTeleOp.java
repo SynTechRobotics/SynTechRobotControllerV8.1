@@ -7,19 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,13 +15,6 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(group = "FINALCODE")
 public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
-
-    TrajectorySequence moveLeft;
-    TrajectorySequence moveRight;
-    TrajectorySequence moveBack;
-    SampleMecanumDrive drive;
-    Servo clawRight;
-    Servo clawLeft;
 
 
     @Override
@@ -48,8 +28,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 //        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
 //        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(0, 0, 0));
+
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
@@ -70,8 +49,8 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
         RightViperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        clawLeft = hardwareMap.servo.get("clwleft");
-        clawRight = hardwareMap.servo.get("clwright");
+        Servo clawLeft = hardwareMap.servo.get("clwleft");
+        Servo clawRight = hardwareMap.servo.get("clwright");
 //        Servo clawLeft = hardwareMap.servo.get("clawLeft");
 //        Servo clawRight = hardwareMap.servo.get("clawRight");
         clawRight.setDirection(Servo.Direction.REVERSE);
@@ -113,7 +92,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            
+
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
@@ -239,15 +218,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
                 clawOpen = true;
             }
         }
-        if (gamepad1.back) {
-            drive.followTrajectorySequence(moveLeft);
-        }
-        if (gamepad1.start) {
-            drive.followTrajectorySequence(moveRight);
-        }
-        if (gamepad1.right_stick_button) {
-            drive.followTrajectorySequence(moveBack);
-        }
+        
 
     }
     }
