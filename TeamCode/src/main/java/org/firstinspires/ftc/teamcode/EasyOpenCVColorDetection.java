@@ -15,11 +15,12 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+//THIS IS UNTESTED AND UNFINISHED
 @Autonomous
 public class EasyOpenCVColorDetection extends OpMode {
 
     OpenCvWebcam webcam1 = null;
-    String outputReal;
+
     @Override
     public void init() {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -31,7 +32,7 @@ public class EasyOpenCVColorDetection extends OpMode {
         webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam1.startStreaming(1280, 720, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                webcam1.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -51,7 +52,10 @@ public class EasyOpenCVColorDetection extends OpMode {
         Mat Crop1;
         Mat Crop2;
         Mat Crop3;
-
+        double leftavgfin;
+        double middleavgfin;
+        double rightavgfin;
+        double[] avgarray = new double[3];
         Mat outPut = new Mat();
         Scalar rect1Color = new Scalar(255.0, 255.0, 0.0);
         Scalar rect2Color = new Scalar(255.0, 255.0, 0.0);
@@ -63,10 +67,11 @@ public class EasyOpenCVColorDetection extends OpMode {
             Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
             telemetry.addLine("pipeline running");
 
-            Rect crop1 = new Rect(1, 1, 239, 1279);
-            Rect crop2 = new Rect(240, 1, 239, 1279);
-            Rect crop3 = new Rect(480, 1, 239, 1279);
+            Rect crop1 = new Rect(1, 1, 425, 719);
+            Rect crop2 = new Rect(426, 1, 425, 719);
+            Rect crop3 = new Rect(852, 1, 425, 719);
 
+            input.copyTo(outPut);
             Imgproc.rectangle(outPut, crop1, rect1Color, 2);
             Imgproc.rectangle(outPut, crop2, rect2Color, 2);
             Imgproc.rectangle(outPut, crop3, rect3Color, 2);
@@ -83,23 +88,21 @@ public class EasyOpenCVColorDetection extends OpMode {
             Scalar midavg = Core.mean(Crop2);
             Scalar rightavg = Core.mean(Crop3);
 
+            avgarray = new double[]{leftavg.val[0], midavg.val[0], rightavg.val[0]};
 
 
-            if (leftavg.val[0] > midavg.val[0] && leftavg.val[0] > rightavg.val[0]) {
+            if (avgarray[0] < avgarray[1] && avgarray[0] < avgarray[2]) {
                 telemetry.addLine("Left");
-                outputReal = "Left";
                 rect1Color = new Scalar(0.0, 0.0, 255.0);
                 rect2Color = new Scalar(255.0, 255.0, 0.0);
                 rect3Color = new Scalar(255.0, 255.0, 0.0);
-            } else if (midavg.val[0] > leftavg.val[0] && midavg.val[0] > rightavg.val[0]){
+            } else if (avgarray[1] < avgarray[0] && avgarray[1] < avgarray[2]){
                 telemetry.addLine("Middle");
-                outputReal = "Middle";
                 rect1Color = new Scalar(255.0, 255.0, 0.0);
                 rect2Color = new Scalar(0.0, 0.0, 255.0);
                 rect3Color = new Scalar(255.0, 255.0, 0.0);
-            } else if (rightavg.val[0] > midavg.val[0] && rightavg.val[0] > leftavg.val[0]) {
+            } else if (avgarray[2] < avgarray[1] && avgarray[2] < avgarray[0]) {
                 telemetry.addLine("Right");
-                outputReal = "Right";
                 rect1Color = new Scalar(255.0, 255.0, 0.0);
                 rect2Color = new Scalar(255.0, 255.0, 0.0);
                 rect3Color = new Scalar(0.0, 0.0, 255.0);

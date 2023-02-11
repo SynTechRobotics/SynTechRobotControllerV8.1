@@ -28,89 +28,13 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(group = "FINALCODE")
 public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 
-    OpenCvWebcam webcam1 = null;
-    String outputReal;
-    class examplePipeline extends OpenCvPipeline {
-        Mat YCbCr = new Mat();
-        Mat Crop1;
-        Mat Crop2;
-        Mat Crop3;
 
-        Mat outPut = new Mat();
-        Scalar rect1Color = new Scalar(255.0, 255.0, 0.0);
-        Scalar rect2Color = new Scalar(255.0, 255.0, 0.0);
-        Scalar rect3Color = new Scalar(255.0, 255.0, 0.0);
-
-
-        public Mat processFrame(Mat input) {
-
-            Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
-            telemetry.addLine("pipeline running");
-
-            Rect crop1 = new Rect(1, 1, 161, 799);
-            Rect crop2 = new Rect(162, 1, 161, 799);
-            Rect crop3 = new Rect(324, 1, 161, 799);
-
-            Imgproc.rectangle(outPut, crop1, rect1Color, 2);
-            Imgproc.rectangle(outPut, crop2, rect2Color, 2);
-            Imgproc.rectangle(outPut, crop3, rect3Color, 2);
-
-            Crop1 = YCbCr.submat(crop1);
-            Crop2 = YCbCr.submat(crop2);
-            Crop3 = YCbCr.submat(crop3);
-
-            Core.extractChannel(Crop1, Crop1, 1);
-            Core.extractChannel(Crop2, Crop2, 1);
-            Core.extractChannel(Crop3, Crop3, 1);
-
-            Scalar leftavg = Core.mean(Crop1);
-            Scalar midavg = Core.mean(Crop2);
-            Scalar rightavg = Core.mean(Crop3);
-
-
-
-            if (leftavg.val[0] > midavg.val[0] && leftavg.val[0] > rightavg.val[0]) {
-                telemetry.addLine("Left");
-                outputReal = "Left";
-                rect1Color = new Scalar(0.0, 0.0, 255.0);
-                rect2Color = new Scalar(255.0, 255.0, 0.0);
-                rect3Color = new Scalar(255.0, 255.0, 0.0);
-            } else if (midavg.val[0] > leftavg.val[0] && midavg.val[0] > rightavg.val[0]){
-                telemetry.addLine("Middle");
-                outputReal = "Middle";
-                rect1Color = new Scalar(255.0, 255.0, 0.0);
-                rect2Color = new Scalar(0.0, 0.0, 255.0);
-                rect3Color = new Scalar(255.0, 255.0, 0.0);
-            } else if (rightavg.val[0] > midavg.val[0] && rightavg.val[0] > leftavg.val[0]) {
-                telemetry.addLine("Right");
-                outputReal = "Right";
-                rect1Color = new Scalar(255.0, 255.0, 0.0);
-                rect2Color = new Scalar(255.0, 255.0, 0.0);
-                rect3Color = new Scalar(0.0, 0.0, 255.0);
-            }
-            Imgproc.rectangle(outPut, crop1, rect1Color, 2);
-            Imgproc.rectangle(outPut, crop2, rect2Color, 2);
-            Imgproc.rectangle(outPut, crop3, rect3Color, 2);
-
-            return(outPut);
-        }
-    }
     TrajectorySequence moveLeft;
     TrajectorySequence moveRight;
     TrajectorySequence moveBack;
     SampleMecanumDrive drive;
     Servo clawRight;
     Servo clawLeft;
-    public void autoAllign() {
-        if (outputReal != "Middle") {
-            if (outputReal == "Left") {
-                drive.followTrajectorySequence(moveRight);
-            }
-            if (outputReal == "Right") {
-                drive.followTrajectorySequence(moveLeft);
-            }
-        }
-    }
 
 
     @Override
@@ -123,24 +47,9 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
 //        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
 //        DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
 //        DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam1 = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 
-        webcam1.setPipeline(new examplePipeline());
-
-        webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam1.startStreaming(800, 448, OpenCvCameraRotation.SIDEWAYS_RIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-        drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.setPoseEstimate(new Pose2d(0, 0, 0));
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor3");
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
@@ -203,6 +112,14 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         double rx;
 
         while (opModeIsActive()) {
+            drive.update();
+
+            // Retrieve your pose
+            Pose2d myPose = drive.getPoseEstimate();
+
+            telemetry.addData("x", myPose.getX());
+            telemetry.addData("y", myPose.getY());
+            telemetry.addData("heading", myPose.getHeading());
             moveLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
                     .strafeLeft(1)
                     .build();
@@ -334,9 +251,14 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
             }
         }
         if (gamepad1.back) {
-            autoAllign();
+            drive.followTrajectorySequence(moveLeft);
+        }
+        if (gamepad1.start) {
+            drive.followTrajectorySequence(moveRight);
+        }
+        if (gamepad1.right_stick_button) {
+            drive.followTrajectorySequence(moveBack);
         }
 
-
-        }
+    }
     }
