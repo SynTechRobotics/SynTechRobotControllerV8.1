@@ -74,7 +74,7 @@ public class AutonomousQualifierLeftSide extends LinearOpMode
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1920,1080, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(800,600, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override

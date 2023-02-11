@@ -54,7 +54,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor4");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor1");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor2");
-        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
+        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "vpRight");
 
 //        DcMotorEx RightViperSlide = hardwareMap.get(DcMotorEx.class, "viperSlideRight");
         DcMotorEx LeftViperSlide = hardwareMap.get(DcMotorEx.class, "vpLeft");
@@ -112,23 +112,8 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
         double rx;
 
         while (opModeIsActive()) {
-            drive.update();
 
-            // Retrieve your pose
-            Pose2d myPose = drive.getPoseEstimate();
-
-            telemetry.addData("x", myPose.getX());
-            telemetry.addData("y", myPose.getY());
-            telemetry.addData("heading", myPose.getHeading());
-            moveLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                    .strafeLeft(1)
-                    .build();
-            moveRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                    .strafeLeft(1)
-                    .build();
-            moveBack = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                    .back(2)
-                    .build();
+            
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
@@ -187,7 +172,7 @@ public class RobotRelativeMecanumTeleOp extends LinearOpMode {
             }
 
             if (prevposition != position) {
-                RightViperSlide.setTargetPosition(-position);
+                RightViperSlide.setTargetPosition(position);
                 LeftViperSlide.setTargetPosition(-position);
                 RightViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 LeftViperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
